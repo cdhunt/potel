@@ -132,6 +132,19 @@ Describe 'Add-ExporterOtlpTrace' {
         { $null = [OpenTelemetry.Sdk]::CreateTracerProviderBuilder() | Add-ExporterOtlpTrace -Endpoint http://tracer/ -Protocol 'magic' } | Should -Throw
         $env:OTEL_EXPORTER_OTLP_PROTOCOL | Should -BeNullOrEmpty
     }
+
+    Describe 'Add-ExporterConsole' {
+
+        It 'Should work with TracerProviderBuilder' -Tag @('unit', 'trace') {
+            $result = [OpenTelemetry.Sdk]::CreateTracerProviderBuilder() | Add-ExporterConsole
+            $result.GetType().FullName | Should -be 'OpenTelemetry.Trace.TracerProviderBuilderBase'
+        }
+
+        It 'Should work with MeterProviderBuilder' -Tag @('unit', 'metric') {
+            $result = [OpenTelemetry.Sdk]::CreateMeterProviderBuilder() | Add-ExporterConsole
+            $result.GetType().FullName | Should -be 'OpenTelemetry.Metrics.MeterProviderBuilderBase'
+        }
+    }
 }
 
 AfterAll {
