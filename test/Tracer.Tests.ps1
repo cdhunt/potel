@@ -10,7 +10,7 @@ BeforeAll {
 
 Describe 'New-TracePRoviderBuilder' {
     Context 'No Parameters' {
-        It 'Returns a new TracerProviderBuilder' -Tag 'trace' {
+        It 'Returns a new TracerProviderBuilder' -Tag @('unit', 'trace') {
             $result = New-TracerProviderBuilder
             $result.GetType().FullName | Should -Be 'OpenTelemetry.Trace.TracerProviderBuilderBase'
         }
@@ -21,7 +21,7 @@ Describe 'New-TracePRoviderBuilder' {
             Mock -ModuleName potel New-ActivitySource { return [System.Diagnostics.ActivitySource]::new("TestSource") }
         }
 
-        It 'Returns a new TracerProviderBuilder' -Tag 'trace' {
+        It 'Returns a new TracerProviderBuilder' -Tag @('unit', 'trace') {
             $result = New-TracerProviderBuilder -ActivityName "TestSource"
             $result.GetType().FullName | Should -Be 'OpenTelemetry.Trace.TracerProviderBuilderBase'
             Should -Invoke New-ActivitySource -ModuleName potel -Times 1 -ParameterFilter {
@@ -40,7 +40,7 @@ Describe 'New-TracePRoviderBuilder' {
             Mock -ModuleName potel New-ActivitySource { return [System.Diagnostics.ActivitySource]::new("TestSource") }
         }
 
-        It 'Returns a new TracerProviderBuilder' -Tag 'trace' {
+        It 'Returns a new TracerProviderBuilder' -Tag @('unit', 'trace') {
             $result = New-TracerProviderBuilder -ActivitySource ([System.Diagnostics.ActivitySource]::new("TestSource"))
             $result.GetType().FullName | Should -Be 'OpenTelemetry.Trace.TracerProviderBuilderBase'
             Should -Invoke New-ActivitySource -ModuleName potel -Times 0
@@ -53,14 +53,33 @@ Describe 'New-TracePRoviderBuilder' {
 }
 
 Describe 'New-ActivitySource' {
-    It 'Returns a new System.Diagnostics.ActivitySource' -Tag 'trace' {
+    It 'Returns a new System.Diagnostics.ActivitySource' -Tag @('unit', 'trace') {
         $result = New-ActivitySource -Name 'TestSource'
         $result.GetType().FullName | Should -be 'System.Diagnostics.ActivitySource'
         $result.Name | Should -Be 'TestSource'
     }
 }
 
-Describe 'Add-TracerSource' {}
+Describe 'Add-TracerSource' {
+    Context 'Name Parameter' {
+        It 'Should accept a string name' -Tag @('unit', 'trace') {
+            { New-TracerProviderBuilder | Add-TracerSource -Name "MyActivity" } | Should -Not -Throw
+        }
+    }
+
+    Context 'ActivitySource Prarameter' {
+        It 'Should accept a Diagnostics.ActivitySource' -Tag @('unit', 'trace') {
+            { $source = New-ActivitySource -Name "MyActivity"
+                New-TracerProviderBuilder | Add-TracerSource -ActivitySource $source } | Should -Not -Throw
+        }
+    }
+}
+
+Describe 'Add-HttpClientInstrumentation' {
+    It 'Should find type OpenTelemetry.Instrumentation.Http' -Tag @('unit', 'trace') {
+        { New-TracerProviderBuilder -ActivityName "TestSource" | Add-HttpClientInstrumentation } | Should -Not -Throw
+    }
+}
 
 AfterAll {
     Remove-Module potel
