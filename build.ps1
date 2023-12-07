@@ -1,8 +1,8 @@
 [CmdletBinding()]
 param (
     [Parameter(Position = 0)]
-    [ValidateSet('clean', 'build', 'changes', 'publish')]
-    [string]
+    [ValidateSet('clean', 'build', 'test', 'changes', 'publish')]
+    [string[]]
     $Task,
 
     [Parameter(Position = 1)]
@@ -61,7 +61,7 @@ function Clean {
 function Build {
     param ()
 
-    New-Item -Path $publish -ItemType Directory | Out-Null
+    New-Item -Path $publish -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
 
     dotnet publish $csproj --runtime win-x64 -o $lib
 
@@ -74,18 +74,26 @@ function Build {
     Copy-Item -Path "$src/potel.psm1" -Destination $publish
     Copy-Item -Path @("$parent/LICENSE", "$parent/README.md") -Destination $publish
 
+    $internalFunctions = Get-ChildItem -Path "$src/internal/*.ps1"
     $publicFunctions = Get-ChildItem -Path "$src/public/*.ps1"
     $privateFunctions = Get-ChildItem -Path "$src/private/*.ps1"
 
+    New-Item -Path "$publish/internal" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
+    foreach ($function in $internalFunctions) {
+        Copy-Item -Path $function.FullName -Destination "$publish/internal/$($function.Name)"
+    }
+
+    New-Item -Path "$publish/public" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
     foreach ($function in $publicFunctions) {
-        Copy-Item -Path $function.FullName -Destination "$publish/public"
-        '. $PSSCriptRoot/public/{0}' -f $function.Name | Add-Content "$publish/potel.psm1"
+        Copy-Item -Path $function.FullName -Destination "$publish/public/$($function.Name)"
+        '. "$PSSCriptRoot/public/{0}"' -f $function.Name | Add-Content "$publish/potel.psm1"
         $manifest.FunctionsToExport += $function.BaseName
     }
 
+    New-Item -Path "$publish/private" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
     foreach ($function in $privateFunctions) {
-        Copy-Item -Path $function.FullName -Destination "$publish/private"
-        '. $PSSCriptRoot/private/{0}' -f $function.Name | Add-Content "$publish/potel.psm1"
+        Copy-Item -Path $function.FullName -Destination "$publish/private/$($function.Name)"
+        '. "$PSSCriptRoot/private/{0}"' -f $function.Name | Add-Content "$publish/potel.psm1"
     }
 
     if ($PSBoundParameters.ContainsKey('Prerelease')) {
@@ -93,6 +101,12 @@ function Build {
     }
 
     New-ModuleManifest @manifest
+}
+
+function Test {
+    param ()
+
+    Invoke-Pester -Path test
 }
 
 function Changes {
@@ -117,19 +131,20 @@ function Publish {
 }
 
 switch ($Task) {
-    'clean' {
+    { $_ -contains 'clean' } {
         Clean
     }
-    'build' {
+    { $_ -contains 'build' } {
         Clean
         Build
     }
-    'changes' {
+    { $_ -contains 'test' } {
+        Test
+    }
+    { $_ -contains 'changes' } {
         Changes
     }
-    'publish' {
-        Clean
-        Build
+    { $_ -contains 'publish' } {
         Publish
     }
     Default {
