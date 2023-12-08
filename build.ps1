@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     [Parameter(Position = 0)]
-    [ValidateSet('clean', 'build', 'test', 'changes', 'publish')]
+    [ValidateSet('clean', 'build', 'test', 'changes', 'publish', 'docs')]
     [string[]]
     $Task,
 
@@ -29,6 +29,7 @@ param (
 $parent = $PSScriptRoot
 $parent = [string]::IsNullOrEmpty($parent) ? $pwd.Path : $parent
 $src = Join-Path $parent -ChildPath "src"
+$docs = Join-Path $parent -ChildPath "docs"
 $publish = Join-Path $parent -ChildPath "publish" -AdditionalChildPath 'potel'
 $csproj = Join-Path -Path $src -ChildPath "dotnet" -AdditionalChildPath "potel.csproj"
 $bin = Join-Path -Path $src -ChildPath "dotnet" -AdditionalChildPath "bin"
@@ -130,6 +131,72 @@ function Publish {
     Publish-Module -Path $publish -Repository $repo -NuGetApiKey $env:PSPublishApiKey -ReleaseNotes $notes
 }
 
+function Docs {
+    param ()
+
+    Import-Module $publish -Force
+
+    $commands = Get-Command -Module potel
+
+    foreach ($command in $Commands) {
+        $name = $command.Name
+        $docPath = Join-Path -Path $docs -ChildPath "$name.md"
+        $help = Get-Help -Name $name
+
+        @"
+# $($command.Name)
+
+$($command.Description)
+
+## Parameters
+
+"@ | Set-Content -Path $docPath
+
+        foreach ($parameterSet in $help.parameters) {
+            foreach ($parameterList in $parameterSet.parameter) {
+                foreach ($parameter in $parameterList | Sort-Object -Property position) {
+
+                    "- [$($parameter.type.name)] $($parameter.name)" | Add-Content -Path $docPath
+                    "  $($parameter.description.Text)" | Add-Content -Path $docPath
+                }
+            }
+        }
+
+        $count = 0
+        @'
+## Examples
+
+'@ | Add-Content -Path $docPath
+        foreach ($exampleList in $help.examples.example) {
+            $count++
+            foreach ($example in $exampleList) {
+                "### Example $count" | Add-Content -Path $docPath
+
+                $($example.remarks.Text.Where({ ![string]::IsNullOrEmpty($_) })) | Add-Content -Path $docPath
+                @"
+
+``````powershell
+$($example.code.Trim("`t"))
+``````
+"@ | Add-Content -Path $docPath
+
+            }
+        }
+
+        if ($help.relatedLinks.count -gt 0) {
+            @'
+## Links
+
+'@ | Add-Content -Path $docPath
+
+            foreach ($link in $help.relatedLinks) {
+                $uri = $link.navigationLink.uri
+                "- [$uri]($uri)" | Add-Content -Path $docPath
+            }
+        }
+    }
+}
+
 switch ($Task) {
     { $_ -contains 'clean' } {
         Clean
@@ -146,6 +213,10 @@ switch ($Task) {
     }
     { $_ -contains 'publish' } {
         Publish
+    }
+    { $_ -contains 'docs' } {
+        Build
+        Docs
     }
     Default {
         Clean
