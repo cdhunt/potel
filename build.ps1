@@ -138,7 +138,14 @@ function Docs {
 
     $commands = Get-Command -Module potel
 
-    foreach ($command in $Commands) {
+    @'
+# Potel
+
+## Cmdlets
+
+'@ | Set-Content -Path "$docs/README.md"
+
+    foreach ($command in $Commands | Sort-Object -Property Verb) {
         $name = $command.Name
         $docPath = Join-Path -Path $docs -ChildPath "$name.md"
         $help = Get-Help -Name $name
@@ -194,6 +201,8 @@ $($example.code.Trim("`t"))
                 "- [$uri]($uri)" | Add-Content -Path $docPath
             }
         }
+
+        "- [$name]($name.md) $($help.Synopsis)" | Add-Content -Path "$docs/README.md"
     }
 }
 
@@ -215,7 +224,6 @@ switch ($Task) {
         Publish
     }
     { $_ -contains 'docs' } {
-        Build
         Docs
     }
     Default {
