@@ -50,6 +50,16 @@ jobs:
       - name: Install Pwsh 7.4
         run: dotnet tool install --global PowerShell --version 7.4.0
 
+      - name: Upgrade pwsh (Linux)
+        if: runner.os	== 'Linux'
+        run: apt-get install --only-upgrade powershell
+
+      - name: Upgrade pwsh (Windows)
+        if: runner.os	== 'Windows'
+        shell: pwsh
+        run: |
+          choco upgrade powershell-core -y -d
+
       - name: Build
         shell: pwsh
         run: ./build.ps1 build -Revision ($env:GITHUB_RUN_ID % 7170539256)
