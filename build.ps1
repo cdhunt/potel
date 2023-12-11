@@ -1,3 +1,5 @@
+#! /usr/bin/pwsh
+
 [CmdletBinding()]
 param (
     [Parameter(Position = 0)]
@@ -56,7 +58,7 @@ $manifest = @{
     FunctionsToExport     = @()
     ModuleVersion         = [version]::new($Major, $Minor, $Build, $Revision)
     ProcessorArchitecture = 'Amd64'
-    PowerShellVersion     = '7.4'
+    PowerShellVersion     = '7.3'
     ProjectUri            = 'https://github.com/cdhunt/potel'
     RootModule            = 'potel.psm1'
     Tags                  = @('otel', 'distributed tracing', 'metrics', 'telemetry')
@@ -119,6 +121,10 @@ function Build {
 
 function Test {
     param ()
+
+    if ($null -eq (Get-Module Pester -ListAvailable)) {
+        Install-Module -Name Pester -Confirm:$false -Force
+    }
 
     Invoke-Pester -Path test
 }
