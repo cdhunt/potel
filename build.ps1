@@ -135,7 +135,7 @@ function ChangeLog {
     "# Changlog"
 
     for ($m = $Minor; $m -ge 1; $m--) {
-        for ($b = $Build; $b -ge 1; $b--) {
+        for ($b = $Build; $b -ge 3; $b--) {
             "## v$Major.$m.$b"
             nbgv get-commits "$Major.$m.$b" | ForEach-Object {
                 $hash, $ver, $message = $_.split(' ')
