@@ -35,6 +35,8 @@ $csproj = Join-Path -Path $src -ChildPath "dotnet" -AdditionalChildPath "potel.c
 $bin = Join-Path -Path $src -ChildPath "dotnet" -AdditionalChildPath "bin"
 $obj = Join-Path -Path $src -ChildPath "dotnet" -AdditionalChildPath "obj"
 $lib = Join-Path -Path $publish -ChildPath "lib"
+$libwin64 = Join-Path -Path $lib -ChildPath "win-x64"
+$liblin64 = Join-Path -Path $lib -ChildPath "linux-x64"
 
 Write-Host "src: $src"
 Write-Host "docs: $docs"
@@ -70,13 +72,15 @@ function Build {
 
     New-Item -Path $publish -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
 
-    dotnet publish $csproj --runtime win-x64 -o $lib
+    dotnet publish $csproj --runtime win-x64 -o $libwin64
+    dotnet publish $csproj --runtime linux-x64 -o $liblin64
 
-    Get-ChildItem -Path $lib -filter "*.json" | Remove-Item -Force -ErrorAction SilentlyContinue
-    Get-ChildItem -Path $lib -filter "*.pdb" | Remove-Item -Force -ErrorAction SilentlyContinue
-    Get-ChildItem -Path $lib -filter "System.Management.Automation.dll" | Remove-Item -Force -ErrorAction SilentlyContinue
-    Get-ChildItem -Path $lib -filter "potel.dll" | Remove-Item -Force -ErrorAction SilentlyContinue
-    Remove-Item -Path @($bin, $obj) -Recurse -Force
+    @($libwin64, $liblin64) | ForEach-Object {
+        Get-ChildItem -Path $_ -filter "*.json" | Remove-Item -Force -ErrorAction SilentlyContinue
+        Get-ChildItem -Path $_ -filter "*.pdb" | Remove-Item -Force -ErrorAction SilentlyContinue
+        Get-ChildItem -Path $_ -filter "System.Management.Automation.dll" | Remove-Item -Force -ErrorAction SilentlyContinue
+        Get-ChildItem -Path $_ -filter "potel.dll" | Remove-Item -Force -ErrorAction SilentlyContinue
+    }
 
     Copy-Item -Path "$src/potel.psm1" -Destination $publish
     Copy-Item -Path @("$parent/LICENSE", "$parent/README.md") -Destination $publish

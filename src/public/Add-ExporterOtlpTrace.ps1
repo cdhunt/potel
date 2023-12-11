@@ -49,7 +49,7 @@ function Add-ExporterOtlpTrace {
         Default {}
     }
 
-    $type = [System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object Location -like "*lib?OpenTelemetry.Exporter.OpenTelemetryProtocol.dll" | Select-Object -Last 1
+    $type = [System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object Location -like "*potel*lib*OpenTelemetry.Exporter.OpenTelemetryProtocol.dll" | Select-Object -Last 1
 
     switch ($PSBoundParameters) {
         { $_.ContainsKey('TracerProvider') } {
