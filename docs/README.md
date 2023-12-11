@@ -1,5 +1,7 @@
 # Potel
 
+PowerShell module for collecting and sending Open Telemetry
+
 ## Cmdlets
 
 - [Add-ExporterConsole](Add-ExporterConsole.md) Adds a Console Exporter

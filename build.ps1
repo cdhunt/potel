@@ -36,12 +36,18 @@ $bin = Join-Path -Path $src -ChildPath "dotnet" -AdditionalChildPath "bin"
 $obj = Join-Path -Path $src -ChildPath "dotnet" -AdditionalChildPath "obj"
 $lib = Join-Path -Path $publish -ChildPath "lib"
 
+Write-Host "src: $src"
+Write-Host "docs: $docs"
+Write-Host "publish: $publish"
+Write-Host "lib: $lib"
+
 $manifest = @{
     Path                  = Join-Path -Path $publish -ChildPath 'potel.psd1'
     Author                = 'Chris Hunt'
     CompanyName           = 'Chris Hunt'
     Copyright             = 'Chris Hunt'
     CompatiblePSEditions  = "Core"
+    Description           = 'PowerShell module for collecting and sending Open Telemetry'
     LicenseUri            = 'https://github.com/cdhunt/potel/blob/main/LICENSE'
     FunctionsToExport     = @()
     ModuleVersion         = [version]::new($Major, $Minor, $Build, $Revision)
@@ -138,12 +144,14 @@ function Docs {
 
     $commands = Get-Command -Module potel
 
-    @'
+    @"
 # Potel
+
+$($manifest.Description)
 
 ## Cmdlets
 
-'@ | Set-Content -Path "$docs/README.md"
+"@ | Set-Content -Path "$docs/README.md"
 
     foreach ($command in $Commands | Sort-Object -Property Verb) {
         $name = $command.Name
