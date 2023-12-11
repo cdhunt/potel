@@ -44,6 +44,10 @@ jobs:
           sarif_file: results.sarif
         if: ${{ matrix.os == 'ubuntu-latest' }}
 
+      - uses: actions/setup-dotnet@v3
+        with:
+          global-json-file: src\dotnet\global.json
+
       - name: Build
         shell: pwsh
         run: ./build.ps1 build -Revision ($env:GITHUB_RUN_ID % 7170539256)
