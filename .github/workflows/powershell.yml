@@ -43,10 +43,12 @@ jobs:
         with:
           sarif_file: results.sarif
         if: ${{ matrix.os == 'ubuntu-latest' }}
-
       - uses: actions/setup-dotnet@v3
         with:
           global-json-file: src/dotnet/global.json
+
+      - name: Install Pwsh 7.4
+        run: dotnet tool install --global PowerShell --version 7.4.0
 
       - name: Build
         shell: pwsh
