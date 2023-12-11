@@ -84,7 +84,7 @@ jobs:
     needs: Test
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/powershell:7.4-ubuntu-22.04
+      image: mcr.microsoft.com/dotnet/sdk:8.0
     steps:
       - uses: actions/checkout@v4
 
