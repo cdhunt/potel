@@ -83,7 +83,8 @@ jobs:
     name: Publish
     needs: Test
     runs-on: ubuntu-latest
-
+    container:
+      image: mcr.microsoft.com/powershell:7.4-ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
