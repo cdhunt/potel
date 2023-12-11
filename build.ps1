@@ -9,19 +9,19 @@ param (
 
     [Parameter(Position = 1)]
     [int]
-    $Revision = 0,
+    $Major = 0,
 
     [Parameter(Position = 2)]
     [int]
-    $Build = 0,
+    $Minor = 1,
 
     [Parameter(Position = 3)]
     [int]
-    $Minor = 1,
+    $Build = 0,
 
     [Parameter(Position = 4)]
     [int]
-    $Major = 0,
+    $Revision = 0,
 
     [Parameter(Position = 5)]
     [string]

@@ -38,9 +38,12 @@ jobs:
         with:
           sarif_file: results.sarif
 
+      - uses: dotnet/nbgv@1801854259a50d987aaa03b99b28cebf49faa779
+        id: nbgv
+
       - name: Build
         shell: pwsh
-        run: ./build.ps1 build -Prerelease "build-($env:GITHUB_RUN_ID % 7170539256)"
+        run: ./build.ps1 build ${{ steps.nbgv.outputs.VersionMajor }} ${{ steps.nbgv.outputs.VersionMinor }} ${{ steps.nbgv.outputs.BuildNumber }} ${{ steps.nbgv.outputs.VersionRevision }} ${{ steps.nbgv.outputs.PrereleaseVersionNoLeadingHyphen }}
 
       - name: Store build output
         uses: actions/upload-artifact@v3
