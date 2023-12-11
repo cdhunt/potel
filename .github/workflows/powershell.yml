@@ -55,5 +55,4 @@ jobs:
         run: ./build.ps1 build -Revision ($env:GITHUB_RUN_ID % 7170539256)
 
       - name: Test
-        shell: pwsh
-        run: ./build.ps1 test
+        run: dotnet powershell -c ./build.ps1 test
