@@ -40,7 +40,7 @@ jobs:
 
       - name: Build
         shell: pwsh
-        run: ./build.ps1 build -Revision ($env:GITHUB_RUN_ID % 7170539256)
+        run: ./build.ps1 build -Prerelease "build-($env:GITHUB_RUN_ID % 7170539256)"
 
       - name: Store build output
         uses: actions/upload-artifact@v3
@@ -96,6 +96,6 @@ jobs:
 
       - name: Publish
         shell: pwsh
-        run: ./build.ps1 publish -Prerelease
+        run: ./build.ps1 publish
         env:
           PSPublishApiKey: ${{ secrets.NUGETAPIKEY }}
