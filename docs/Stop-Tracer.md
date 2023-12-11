@@ -4,7 +4,7 @@
 
 ## Parameters
 
-- [TracerProvider] TracerProvider
-  
+- `[TracerProvider]` **TracerProvider**
+  _no description_
 ## Examples
 

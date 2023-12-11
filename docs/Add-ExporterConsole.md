@@ -4,10 +4,10 @@
 
 ## Parameters
 
-- [TracerProviderBuilderBase] TracerProvider
-  Parameter help description
-- [MeterProviderBuilderBase] MeterBuilder
-  
+- `[TracerProviderBuilderBase]` **TracerProvider**
+  _Parameter help description_
+- `[MeterProviderBuilderBase]` **MeterBuilder**
+  _no description_
 ## Examples
 
 ### Example 1

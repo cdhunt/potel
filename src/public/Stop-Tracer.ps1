@@ -1,3 +1,7 @@
+<#
+.SYNOPSIS
+    Stop the Tracer
+#>
 function Stop-Tracer {
     [CmdletBinding()]
     param (

@@ -185,8 +185,8 @@ $($command.Description)
             foreach ($parameterList in $parameterSet.parameter) {
                 foreach ($parameter in $parameterList | Sort-Object -Property position) {
 
-                    "- [$($parameter.type.name)] $($parameter.name)" | Add-Content -Path $docPath
-                    "  $($parameter.description.Text)" | Add-Content -Path $docPath
+                    "- ``[$($parameter.type.name)]`` **$($parameter.name)**" | Add-Content -Path $docPath
+                    "  _$($parameter.description.Text ?? 'no description')_" | Add-Content -Path $docPath
                 }
             }
         }

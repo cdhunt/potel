@@ -4,8 +4,8 @@
 
 ## Parameters
 
-- [TracerProviderBuilderBase] InputObject
-  Instance of TracerProviderBuilderBase.
+- `[TracerProviderBuilderBase]` **InputObject**
+  _Instance of TracerProviderBuilderBase._
 ## Examples
 
 ### Example 1

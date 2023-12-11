@@ -4,24 +4,24 @@
 
 ## Parameters
 
-- [String[]] Name
-  
-- [ActivitySource] ActivitySource
-  
-- [TracerProviderBuilderBase] TracerProviderBuilder
-  
+- `[String[]]` **Name**
+  _no description_
+- `[ActivitySource]` **ActivitySource**
+  _no description_
+- `[TracerProviderBuilderBase]` **TracerProviderBuilder**
+  _no description_
 ## Examples
 
 ### Example 1
-Adds a source by given name value.
+Add a source by Name.
 
 ```powershell
 New-TracerProviderBuilder | Add-TracerSource -Name "MyActivity"
 ```
 ### Example 2
-Adds a source from an ActivitySource object.
+Create an Activity Soruce object.
 
 ```powershell
 $source = New-ActivitySource -Name "MyActivity"
-      PS> New-TracerProviderBuilder | Add-TracerSource -AcvititySource $source
+New-TracerProviderBuilder | Add-TracerSource -AcvititySource $source
 ```

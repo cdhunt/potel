@@ -8,13 +8,7 @@ PowerShell module for collecting and sending Open Telemetry
 - [Add-ExporterOtlpTrace](Add-ExporterOtlpTrace.md) Adds an OTLP Exporter
 - [Add-HttpClientInstrumentation](Add-HttpClientInstrumentation.md) Adds Http Client Instrumentation
 - [Add-TracerSource](Add-TracerSource.md) Adds Http Client Instrumentation
-- [New-ActivitySource](New-ActivitySource.md) 
-New-ActivitySource [-Name] <string> [<CommonParameters>]
-
+- [New-ActivitySource](New-ActivitySource.md) Create a new ActivitySource object
 - [New-TracerProviderBuilder](New-TracerProviderBuilder.md) Creates new Tracer Provider Builder
-- [Start-Tracer](Start-Tracer.md) 
-Start-Tracer [-InputObject] <TracerProviderBuilderBase> [-PassThru] [<CommonParameters>]
-
-- [Stop-Tracer](Stop-Tracer.md) 
-Stop-Tracer [[-TracerProvider] <TracerProvider>] [<CommonParameters>]
-
+- [Start-Tracer](Start-Tracer.md) Start the Tracer
+- [Stop-Tracer](Stop-Tracer.md) Stop the Tracer

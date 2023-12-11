@@ -4,10 +4,10 @@
 
 ## Parameters
 
-- [String] ActivityName
-  
-- [ActivitySource] ActivitySource
-  
+- `[String]` **ActivityName**
+  _no description_
+- `[ActivitySource]` **ActivitySource**
+  _no description_
 ## Examples
 
 ### Example 1

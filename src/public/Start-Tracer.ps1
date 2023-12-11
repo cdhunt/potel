@@ -1,3 +1,7 @@
+<#
+.SYNOPSIS
+    Start the Tracer
+#>
 function Start-Tracer {
     [CmdletBinding()]
     param (

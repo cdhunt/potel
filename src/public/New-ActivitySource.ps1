@@ -1,3 +1,7 @@
+<#
+.SYNOPSIS
+    Create a new ActivitySource object
+#>
 function New-ActivitySource {
     [CmdletBinding()]
     param (

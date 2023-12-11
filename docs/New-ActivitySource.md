@@ -4,7 +4,7 @@
 
 ## Parameters
 
-- [string] Name
-  
+- `[String]` **Name**
+  _no description_
 ## Examples
 

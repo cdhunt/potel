@@ -11,10 +11,14 @@ function Add-TracerSource {
 	.OUTPUTS
 		TracerProviderBuilderBase
 	.EXAMPLE
-		PS> New-TracerProviderBuilder | Add-TracerSource -Name "MyActivity"
+		New-TracerProviderBuilder | Add-TracerSource -Name "MyActivity"
+
+        Add a source by Name.
 	.EXAMPLE
-		PS> $source = New-ActivitySource -Name "MyActivity"
-        PS> New-TracerProviderBuilder | Add-TracerSource -AcvititySource $source
+		$source = New-ActivitySource -Name "MyActivity"
+		New-TracerProviderBuilder | Add-TracerSource -AcvititySource $source
+
+        Create an Activity Soruce object.
 	#>
     [CmdletBinding(DefaultParameterSetName = "byString")]
     param (
