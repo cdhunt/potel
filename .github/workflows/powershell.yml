@@ -94,7 +94,7 @@ jobs:
           name: build
           path: publish
 
-      - name: Test
+      - name: Publish
         shell: pwsh
         run: ./build.ps1 publish
         env:

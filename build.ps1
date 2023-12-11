@@ -61,7 +61,7 @@ $manifest = @{
     PowerShellVersion     = '7.3'
     ProjectUri            = 'https://github.com/cdhunt/potel'
     RootModule            = 'potel.psm1'
-    Tags                  = @('otel', 'distributed tracing', 'metrics', 'telemetry')
+    Tags                  = @('otel', 'distributed-tracing', 'metrics', 'telemetry', 'diagnostics')
 }
 
 function Clean {
