@@ -39,7 +39,7 @@ jobs:
 
       - name: Build
         shell: pwsh
-        run: ./build.ps1 build -Revision $env:GITHUB_RUN_ID
+        run: ./build.ps1 build -Revision ($env:GITHUB_RUN_ID % 7170539256)
 
       - name: Test
         shell: pwsh
