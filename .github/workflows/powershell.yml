@@ -9,16 +9,14 @@ on:
 permissions:
   contents: read
 
-
-
 jobs:
   build:
     permissions:
       contents: read # for actions/checkout to fetch code
       security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
       actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
-    name: Build on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Build
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         os: [windows-latest]
@@ -35,34 +33,45 @@ jobs:
           # Include your own basic security rules. Removing this option will run all the rules
           includeRule: '"PSAvoidGlobalAliases", "PSAvoidUsingConvertToSecureStringWithPlainText"'
           output: results.sarif
-        if: ${{ matrix.os == 'ubuntu-latest' }}
 
       # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: results.sarif
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-      - uses: actions/setup-dotnet@v3
-        with:
-          global-json-file: src/dotnet/global.json
-
-      - name: Install Pwsh 7.4
-        run: dotnet tool install --global PowerShell --version 7.4.0
-
-      - name: Upgrade pwsh (Linux)
-        if: runner.os	== 'Linux'
-        run: apt-get install --only-upgrade powershell
-
-      - name: Upgrade pwsh (Windows)
-        if: runner.os	== 'Windows'
-        shell: pwsh
-        run: |
-          choco upgrade powershell-core -y -d
 
       - name: Build
         shell: pwsh
         run: ./build.ps1 build -Revision ($env:GITHUB_RUN_ID % 7170539256)
 
+      - name: Store build output
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: |
+            publish
+          retention-days: 1
+
+  test:
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+    name: Test
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/powershell:${{ matrix.pwshv }}-ubuntu-22.04
+    strategy:
+      matrix:
+        pwshv: ['7.3','7.4']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build output
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
       - name: Test
-        run: dotnet powershell -c ./build.ps1 test
+        shell: pwsh
+        run: ./build.ps1 test
