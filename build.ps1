@@ -43,6 +43,7 @@ Write-Host "docs: $docs"
 Write-Host "publish: $publish"
 Write-Host "lib: $lib"
 Write-Host "dotnet: $([Environment]::Version)"
+Write-Host "ps: $($PSVersionTable.PSVersion)"
 
 $manifest = @{
     Path                  = Join-Path -Path $publish -ChildPath 'potel.psd1'
