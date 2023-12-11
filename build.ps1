@@ -158,7 +158,7 @@ function Publish {
 
     $repo = if ($env:PSPublishRepo) { $env:PSPublishRepo } else { 'PSGallery' }
 
-    $notes = Changes
+    $notes = ChangeLog
     Publish-Module -Path $publish -Repository $repo -NuGetApiKey $env:PSPublishApiKey -ReleaseNotes $notes
 }
 
