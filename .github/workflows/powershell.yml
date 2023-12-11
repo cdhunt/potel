@@ -96,6 +96,6 @@ jobs:
 
       - name: Publish
         shell: pwsh
-        run: ./build.ps1 publish
+        run: ./build.ps1 publish -Prerelease
         env:
           PSPublishApiKey: ${{ secrets.NUGETAPIKEY }}
