@@ -3,7 +3,7 @@
 [CmdletBinding()]
 param (
     [Parameter(Position = 0)]
-    [ValidateSet('clean', 'build', 'test', 'changes', 'publish', 'docs')]
+    [ValidateSet('clean', 'build', 'test', 'changelog', 'publish', 'docs')]
     [string[]]
     $Task,
 
@@ -129,10 +129,22 @@ function Test {
     Invoke-Pester -Path test
 }
 
-function Changes {
+function ChangeLog {
     param ()
 
-    git log -n 3 --pretty='format:%h %s'
+    "# Changlog"
+
+    for ($m = $Minor; $m -ge 1; $m--) {
+        for ($b = $Build; $b -ge 1; $b--) {
+            "## v$Major.$m.$b"
+            nbgv get-commits "$Major.$m.$b" | ForEach-Object {
+                $hash, $ver, $message = $_.split(' ')
+                $shortHash = $hash.Substring(0, 7)
+
+                "- [$shortHash](https://github.com/cdhunt/potel/commit/$hash) $($message -join ' ')"
+            }
+        }
+    }
 }
 
 function Commit {
@@ -146,8 +158,7 @@ function Publish {
 
     $repo = if ($env:PSPublishRepo) { $env:PSPublishRepo } else { 'PSGallery' }
 
-    #$notes = Changes
-    $notes = "Initial Publish"
+    $notes = Changes
     Publish-Module -Path $publish -Repository $repo -NuGetApiKey $env:PSPublishApiKey -ReleaseNotes $notes
 }
 
@@ -226,6 +237,8 @@ $($example.code.Trim("`t"))
 
         "- [$name]($name.md) $($help.Synopsis)" | Add-Content -Path "$docs/README.md"
     }
+
+    ChangeLog | Set-Content -Path "$docs/Changelog.md"
 }
 
 switch ($Task) {
@@ -239,8 +252,8 @@ switch ($Task) {
     { $_ -contains 'test' } {
         Test
     }
-    { $_ -contains 'changes' } {
-        Changes
+    { $_ -contains 'changelog' } {
+        ChangeLog
     }
     { $_ -contains 'publish' } {
         Publish
