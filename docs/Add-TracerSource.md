@@ -1,15 +1,15 @@
 # Add-TracerSource
 
-
+Adds Http Client Instrumentation
 
 ## Parameters
 
-- `[String[]]` **Name**
-  _no description_
-- `[ActivitySource]` **ActivitySource**
-  _no description_
-- `[TracerProviderBuilderBase]` **TracerProviderBuilder**
-  _no description_
+- `[String[]]`  **Name**
+ _no description_
+- `[ActivitySource]`  **ActivitySource**
+ _no description_
+- `[TracerProviderBuilderBase]` (pipeline: true (ByValue)) **TracerProviderBuilder**
+ _no description_
 ## Examples
 
 ### Example 1
@@ -25,3 +25,7 @@ Create an Activity Soruce object.
 $source = New-ActivitySource -Name "MyActivity"
 New-TracerProviderBuilder | Add-TracerSource -AcvititySource $source
 ```
+## Links
+
+- [New-TracerProviderBuilder](New-TracerProviderBuilder)
+- [New-ActivitySource](New-ActivitySource)

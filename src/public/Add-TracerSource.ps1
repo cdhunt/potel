@@ -19,6 +19,10 @@ function Add-TracerSource {
 		New-TracerProviderBuilder | Add-TracerSource -AcvititySource $source
 
         Create an Activity Soruce object.
+    .LINK
+        New-TracerProviderBuilder
+    .LINK
+        New-ActivitySource
 	#>
     [CmdletBinding(DefaultParameterSetName = "byString")]
     param (

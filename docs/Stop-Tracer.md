@@ -1,10 +1,10 @@
 # Stop-Tracer
 
-
+Stop the Tracer
 
 ## Parameters
 
-- `[TracerProvider]` **TracerProvider**
-  _no description_
+- `[TracerProvider]` (pipeline: true (ByValue)) **TracerProvider**
+ _no description_
 ## Examples
 

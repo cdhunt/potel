@@ -1,13 +1,13 @@
 # New-TracerProviderBuilder
 
-
+Creates instance of OpenTelemetry.Sdk TracerProviderBuilder
 
 ## Parameters
 
-- `[String]` **ActivityName**
-  _no description_
-- `[ActivitySource]` **ActivitySource**
-  _no description_
+- `[String]`  **ActivityName**
+ _no description_
+- `[ActivitySource]`  **ActivitySource**
+ _no description_
 ## Examples
 
 ### Example 1
@@ -22,4 +22,7 @@ New-TracerProviderBuilder -ActivyName "MyActivity"
 ```
 ## Links
 
+- [Add-TracerSource](Add-TracerSource)
+- [Start-Tracer](Start-Tracer)
+- [Stop-Tracer](Stop-Tracer)
 - [https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry/Sdk.cs](https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry/Sdk.cs)

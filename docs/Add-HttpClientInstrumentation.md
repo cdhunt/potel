@@ -1,11 +1,11 @@
 # Add-HttpClientInstrumentation
 
-
+Adds Http Client Instrumentation
 
 ## Parameters
 
-- `[TracerProviderBuilderBase]` **InputObject**
-  _Instance of TracerProviderBuilderBase._
+- `[TracerProviderBuilderBase]` (pipeline: true (ByValue)) **InputObject**
+ _Instance of TracerProviderBuilderBase._
 ## Examples
 
 ### Example 1
@@ -13,3 +13,5 @@
 ```powershell
 New-TracerBuilder | Add-HttpClientInstrumentation
 ```
+## Links
+

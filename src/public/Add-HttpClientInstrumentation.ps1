@@ -12,6 +12,8 @@ function Add-HttpClientInstrumentation {
 		TracerProviderBuilderBase
 	.EXAMPLE
 		PS> New-TracerBuilder | Add-HttpClientInstrumentation
+	.LINK
+		New-TracerBuilder
 	#>
     [CmdletBinding()]
     param (

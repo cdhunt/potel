@@ -9,11 +9,17 @@ function New-TracerProviderBuilder {
 	.OUTPUTS
 		TracerProviderBuilder
 	.EXAMPLE
-		PS> New-TracerProviderBuilder
+		New-TracerProviderBuilder
 	.EXAMPLE
-		PS> New-TracerProviderBuilder -ActivyName "MyActivity"
+		New-TracerProviderBuilder -ActivyName "MyActivity"
     .LINK
         https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry/Sdk.cs
+	.LINK
+		Add-TracerSource
+	.LINK
+		Start-Tracer
+	.LINK
+		Stop-Tracer
 	#>
 	[CmdletBinding(DefaultParameterSetName = "byString")]
 	param (

@@ -11,7 +11,11 @@ function Add-ExporterConsole {
 	.OUTPUTS
 		TracerProviderBuilderBase
 	.EXAMPLE
-		PS> New-TracerBuilder | Add-HttpClientInstrumentation
+		New-TracerBuilder | Add-HttpClientInstrumentation
+    .LINK
+        New-TracerBuilder
+    .LINK
+        Add-HttpClientInstrumentation
 	#>
     [CmdletBinding()]
     param (

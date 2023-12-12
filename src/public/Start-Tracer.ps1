@@ -1,6 +1,8 @@
 <#
 .SYNOPSIS
     Start the Tracer
+.LINK
+    New-TracerProviderBuilder
 #>
 function Start-Tracer {
     [CmdletBinding()]

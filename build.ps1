@@ -9,19 +9,19 @@ param (
 
     [Parameter(Position = 1)]
     [int]
-    $Major = 0,
+    $Major = $(nbgv get-version -v VersionMajor),
 
     [Parameter(Position = 2)]
     [int]
-    $Minor = 1,
+    $Minor = $(nbgv get-version -v VersionMinor),
 
     [Parameter(Position = 3)]
     [int]
-    $Build = 0,
+    $Build = $(nbgv get-version -v BuildNumber),
 
     [Parameter(Position = 4)]
     [int]
-    $Revision = 0,
+    $Revision = $(nbgv get-version -v Revision),
 
     [Parameter(Position = 5)]
     [string]
@@ -134,6 +134,8 @@ function ChangeLog {
 
     "# Changlog"
 
+
+
     for ($m = $Minor; $m -ge 1; $m--) {
         for ($b = $Build; $b -ge 3; $b--) {
             "## v$Major.$m.$b"
@@ -186,7 +188,7 @@ $($manifest.Description)
         @"
 # $($command.Name)
 
-$($command.Description)
+$($help.Description.Text ?? $help.Synopsis)
 
 ## Parameters
 
@@ -195,9 +197,9 @@ $($command.Description)
         foreach ($parameterSet in $help.parameters) {
             foreach ($parameterList in $parameterSet.parameter) {
                 foreach ($parameter in $parameterList | Sort-Object -Property position) {
-
-                    "- ``[$($parameter.type.name)]`` **$($parameter.name)**" | Add-Content -Path $docPath
-                    "  _$($parameter.description.Text ?? 'no description')_" | Add-Content -Path $docPath
+                    $pipelineInput = $parameter.pipelineInput -like "true*" ? "(pipeline: $($parameter.pipelineInput))" : ''
+                    "- ``[$($parameter.type.name)]`` $pipelineInput **$($parameter.name)**" | Add-Content -Path $docPath
+                    " _$($parameter.description.Text ?? 'no description')_" | Add-Content -Path $docPath
                 }
             }
         }
@@ -230,8 +232,20 @@ $($example.code.Trim("`t"))
 '@ | Add-Content -Path $docPath
 
             foreach ($link in $help.relatedLinks) {
-                $uri = $link.navigationLink.uri
-                "- [$uri]($uri)" | Add-Content -Path $docPath
+
+                foreach ($text in $link.navigationLink.linkText) {
+
+                    if ($Commands.Name -contains $text) {
+                        $uri = $text
+                        "- [$uri]($uri)" | Add-Content -Path $docPath
+                    }
+
+                }
+                foreach ($uri in $link.navigationLink.uri) {
+                    if (![string]::IsNullOrEmpty($uri)) {
+                        "- [$uri]($uri)" | Add-Content -Path $docPath
+                    }
+                }
             }
         }
 
