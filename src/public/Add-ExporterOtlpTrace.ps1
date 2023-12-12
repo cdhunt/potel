@@ -4,18 +4,30 @@ function Add-ExporterOtlpTrace {
 		Adds an OTLP Exporter
 	.DESCRIPTION
 		Adds OpenTelemetry.Exporter.Console
-	.PARAMETER InputObject
+	.PARAMETER TracerProvider
 		Instance of TracerProviderBuilderBase.
+	.PARAMETER MeterBuilder
+		Instance of MeterProviderBuilderBase.
+    .PARAMETER Endpoint
+        OTLP endpoint address
+    .PARAMETER Headers
+        Headers to send
+    .PARAMETER Timeout
+        Send timeout in ms
+    .PARAMETER Protocol
+        'grpc' or 'http/protobuf'
 	.INPUTS
 		Instance of TracerProviderBuilderBase
 	.OUTPUTS
 		TracerProviderBuilderBase
 	.EXAMPLE
-		PS> New-TracerBuilder | Add-HttpClientInstrumentation
+		New-TracerProviderBuilder | Add-HttpClientInstrumentation | Add-ExporterOtlpTrace | Start-Trace
     .LINK
-        New-TracerBuilder
+        New-TracerProviderBuilder
     .LINK
         Add-HttpClientInstrumentation
+    .LINK
+        Start-Tracer
 	#>
     [CmdletBinding()]
     param (

@@ -1,28 +1,46 @@
 # Add-ExporterOtlpTrace
 
-Adds OpenTelemetry.Exporter.Console
 
+Adds OpenTelemetry.Exporter.Console
 ## Parameters
 
-- `[TracerProviderBuilderBase]` (pipeline: true (ByValue)) **TracerProvider**
- _no description_
-- `[MeterProviderBuilderBase]` (pipeline: true (ByValue)) **MeterBuilder**
- _no description_
-- `[String]`  **Endpoint**
- _no description_
-- `[Hashtable]`  **Headers**
- _no description_
-- `[UInt32]`  **Timeout**
- _no description_
-- `[String]`  **Protocol**
- _no description_
+
+### Parameter Set 1
+
+
+- `[TracerProviderBuilderBase]` **TracerProvider** _Instance of TracerProviderBuilderBase_.  Mandatory, ValueFromPipeline
+- `[String]` **Endpoint** _OTLP endpoint address_.  Mandatory
+- `[Hashtable]` **Headers** _Headers to send_.  
+- `[UInt32]` **Timeout** _Send timeout in ms_.  
+- `[String]` **Protocol** _'grpc' or 'http/protobuf'_.  
+
+
+### Parameter Set 2
+
+
+- `[MeterProviderBuilderBase]` **MeterBuilder** _Instance of MeterProviderBuilderBase_.  Mandatory, ValueFromPipeline
+- `[String]` **Endpoint** _OTLP endpoint address_.  Mandatory
+- `[Hashtable]` **Headers** _Headers to send_.  
+- `[UInt32]` **Timeout** _Send timeout in ms_.  
+- `[String]` **Protocol** _'grpc' or 'http/protobuf'_.  
+
+
 ## Examples
+
 
 ### Example 1
 
+
+
+
 ```powershell
-New-TracerBuilder | Add-HttpClientInstrumentation
+New-TracerProviderBuilder | Add-HttpClientInstrumentation | Add-ExporterOtlpTrace | Start-Trace
 ```
+
+
 ## Links
 
+
+- [New-TracerProviderBuilder](New-TracerProviderBuilder.md)
 - [Add-HttpClientInstrumentation](Add-HttpClientInstrumentation.md)
+- [Start-Tracer](Start-Tracer.md)
