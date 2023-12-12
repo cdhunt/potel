@@ -25,4 +25,4 @@ New-TracerBuilder | Add-HttpClientInstrumentation
 ```
 ## Links
 
-- [Add-HttpClientInstrumentation](Add-HttpClientInstrumentation)
+- [Add-HttpClientInstrumentation](Add-HttpClientInstrumentation.md)

@@ -12,4 +12,4 @@ Start the Tracer
 
 ## Links
 
-- [New-TracerProviderBuilder](New-TracerProviderBuilder)
+- [New-TracerProviderBuilder](New-TracerProviderBuilder.md)

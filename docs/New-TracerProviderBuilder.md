@@ -22,7 +22,7 @@ New-TracerProviderBuilder -ActivyName "MyActivity"
 ```
 ## Links
 
-- [Add-TracerSource](Add-TracerSource)
-- [Start-Tracer](Start-Tracer)
-- [Stop-Tracer](Stop-Tracer)
+- [Add-TracerSource](Add-TracerSource.md)
+- [Start-Tracer](Start-Tracer.md)
+- [Stop-Tracer](Stop-Tracer.md)
 - [https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry/Sdk.cs](https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry/Sdk.cs)

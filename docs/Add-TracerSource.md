@@ -27,5 +27,5 @@ New-TracerProviderBuilder | Add-TracerSource -AcvititySource $source
 ```
 ## Links
 
-- [New-TracerProviderBuilder](New-TracerProviderBuilder)
-- [New-ActivitySource](New-ActivitySource)
+- [New-TracerProviderBuilder](New-TracerProviderBuilder.md)
+- [New-ActivitySource](New-ActivitySource.md)

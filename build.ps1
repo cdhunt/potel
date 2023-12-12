@@ -237,7 +237,7 @@ $($example.code.Trim("`t"))
 
                     if ($Commands.Name -contains $text) {
                         $uri = $text
-                        "- [$uri]($uri)" | Add-Content -Path $docPath
+                        "- [$uri]($uri.md)" | Add-Content -Path $docPath
                     }
 
                 }
