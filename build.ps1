@@ -30,9 +30,9 @@ param (
 
 if ( (Get-Command 'nbgv' -CommandType Application -ErrorAction SilentlyContinue) ) {
     if (!$PSBoundParameters.ContainsKey('Major')) { $Major = $(nbgv get-version -v VersionMajor) }
-    if (!$PSBoundParameters.ContainsKey('Minor')) { $Major = $(nbgv get-version -v VersionMinor) }
-    if (!$PSBoundParameters.ContainsKey('Build')) { $Major = $(nbgv get-version -v BuildNumber) }
-    if (!$PSBoundParameters.ContainsKey('Revision')) { $Major = $(nbgv get-version -v Revision) }
+    if (!$PSBoundParameters.ContainsKey('Minor')) { $Minor = $(nbgv get-version -v VersionMinor) }
+    if (!$PSBoundParameters.ContainsKey('Build')) { $Build = $(nbgv get-version -v BuildNumber) }
+    if (!$PSBoundParameters.ContainsKey('Revision')) { $Revision = $(nbgv get-version -v VersionRevision) }
 }
 
 $parent = $PSScriptRoot
@@ -139,12 +139,11 @@ function Test {
 function ChangeLog {
     param ()
 
-    "# Changlog"
+    "# Changelog"
 
-
-
+    # Start log at >0.1.11
     for ($m = $Minor; $m -ge 1; $m--) {
-        for ($b = $Build; $b -ge 3; $b--) {
+        for ($b = $Build; $b -gt 11; $b--) {
             "## v$Major.$m.$b"
             nbgv get-commits "$Major.$m.$b" | ForEach-Object {
                 $hash, $ver, $message = $_.split(' ')
@@ -165,6 +164,12 @@ function Commit {
 function Publish {
     param ()
 
+    $docChanges = git status docs -s
+
+    if ($docChanges.count -gt 0) {
+        Write-Warning "There are pending Docs change. Run './build.ps1 docs', review and commit updated docs."
+    }
+
     $repo = if ($env:PSPublishRepo) { $env:PSPublishRepo } else { 'PSGallery' }
 
     $notes = ChangeLog
@@ -177,89 +182,24 @@ function Docs {
     Import-Module $publish -Force
 
     $commands = Get-Command -Module potel
+    $HelpToMd = Join-Path -Path $src -ChildPath 'internal' -AdditionalChildPath 'Export-HelpToMd.ps1'
+    . $HelpToMd
 
-    @"
-# Potel
-
-$($manifest.Description)
-
-## Cmdlets
-
-"@ | Set-Content -Path "$docs/README.md"
+    @('# Potel', [System.Environment]::NewLine) | Set-Content -Path "$docs/README.md"
+    $($manifest.Description) | Add-Content -Path "$docs/README.md"
+    @('## Cmdlets', [System.Environment]::NewLine) | Add-Content -Path "$docs/README.md"
 
     foreach ($command in $Commands | Sort-Object -Property Verb) {
         $name = $command.Name
         $docPath = Join-Path -Path $docs -ChildPath "$name.md"
         $help = Get-Help -Name $name
 
-        @"
-# $($command.Name)
-
-$($help.Description.Text ?? $help.Synopsis)
-
-## Parameters
-
-"@ | Set-Content -Path $docPath
-
-        foreach ($parameterSet in $help.parameters) {
-            foreach ($parameterList in $parameterSet.parameter) {
-                foreach ($parameter in $parameterList | Sort-Object -Property position) {
-                    $pipelineInput = $parameter.pipelineInput -like "true*" ? "(pipeline: $($parameter.pipelineInput))" : ''
-                    "- ``[$($parameter.type.name)]`` $pipelineInput **$($parameter.name)**" | Add-Content -Path $docPath
-                    " _$($parameter.description.Text ?? 'no description')_" | Add-Content -Path $docPath
-                }
-            }
-        }
-
-        $count = 0
-        @'
-## Examples
-
-'@ | Add-Content -Path $docPath
-        foreach ($exampleList in $help.examples.example) {
-            $count++
-            foreach ($example in $exampleList) {
-                "### Example $count" | Add-Content -Path $docPath
-
-                $($example.remarks.Text.Where({ ![string]::IsNullOrEmpty($_) })) | Add-Content -Path $docPath
-                @"
-
-``````powershell
-$($example.code.Trim("`t"))
-``````
-"@ | Add-Content -Path $docPath
-
-            }
-        }
-
-        if ($help.relatedLinks.count -gt 0) {
-            @'
-## Links
-
-'@ | Add-Content -Path $docPath
-
-            foreach ($link in $help.relatedLinks) {
-
-                foreach ($text in $link.navigationLink.linkText) {
-
-                    if ($Commands.Name -contains $text) {
-                        $uri = $text
-                        "- [$uri]($uri.md)" | Add-Content -Path $docPath
-                    }
-
-                }
-                foreach ($uri in $link.navigationLink.uri) {
-                    if (![string]::IsNullOrEmpty($uri)) {
-                        "- [$uri]($uri)" | Add-Content -Path $docPath
-                    }
-                }
-            }
-        }
+        Export-HelpToMd $help | Set-Content -Path $docPath
 
         "- [$name]($name.md) $($help.Synopsis)" | Add-Content -Path "$docs/README.md"
     }
 
-    ChangeLog | Set-Content -Path "$docs/Changelog.md"
+    ChangeLog | Set-Content -Path "$parent/Changelog.md"
 }
 
 switch ($Task) {
@@ -277,6 +217,7 @@ switch ($Task) {
         ChangeLog
     }
     { $_ -contains 'publish' } {
+        Docs
         Publish
     }
     { $_ -contains 'docs' } {

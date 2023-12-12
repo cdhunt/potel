@@ -4,18 +4,22 @@ function Add-ExporterConsole {
 		Adds a Console Exporter
 	.DESCRIPTION
 		Adds OpenTelemetry.Exporter.Console
-	.PARAMETER InputObject
+	.PARAMETER TracerProvider
 		Instance of TracerProviderBuilderBase.
+	.PARAMETER MeterBuilder
+		Instance of MeterProviderBuilderBase.
 	.INPUTS
 		Instance of TracerProviderBuilderBase
 	.OUTPUTS
 		TracerProviderBuilderBase
 	.EXAMPLE
-		New-TracerBuilder | Add-HttpClientInstrumentation
+		New-TracerProviderBuilder | Add-HttpClientInstrumentation | Add-ExporterConsole | Start-Trace
     .LINK
         New-TracerBuilder
     .LINK
         Add-HttpClientInstrumentation
+    .LINK
+        Start-Tracer
 	#>
     [CmdletBinding()]
     param (

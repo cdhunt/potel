@@ -1,11 +1,15 @@
 function Add-TracerSource {
     <#
 	.SYNOPSIS
-		Adds Http Client Instrumentation
+		Adds and ActivitySource to a TracerProviderBuilder
 	.DESCRIPTION
-		Adds Http Client Instrumentation
-	.PARAMETER InputObject
-		Instance of TracerProviderBuilderBase.
+		Adds and ActivitySource to a TracerProviderBuilder
+	.PARAMETER Name
+		Name of the Activity
+	.PARAMETER ActivitySource
+		An ActivitySource object
+    .PARAMETER TracerProviderBuilder
+        A TracerProviderBuilderBase object
 	.INPUTS
 		Instance of TracerProviderBuilderBase
 	.OUTPUTS

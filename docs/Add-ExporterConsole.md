@@ -1,20 +1,38 @@
 # Add-ExporterConsole
 
-Adds OpenTelemetry.Exporter.Console
 
+Adds OpenTelemetry.Exporter.Console
 ## Parameters
 
-- `[TracerProviderBuilderBase]` (pipeline: true (ByValue)) **TracerProvider**
- _Parameter help description_
-- `[MeterProviderBuilderBase]` (pipeline: true (ByValue)) **MeterBuilder**
- _no description_
+
+### Parameter Set 1
+
+
+- `[TracerProviderBuilderBase]` **TracerProvider** _Instance of TracerProviderBuilderBase_.  Mandatory, ValueFromPipeline
+
+
+### Parameter Set 2
+
+
+- `[MeterProviderBuilderBase]` **MeterBuilder** _Instance of MeterProviderBuilderBase_.  Mandatory, ValueFromPipeline
+
+
 ## Examples
+
 
 ### Example 1
 
+
+
+
 ```powershell
-New-TracerBuilder | Add-HttpClientInstrumentation
+New-TracerProviderBuilder | Add-HttpClientInstrumentation | Add-ExporterConsole | Start-Trace
 ```
+
+
 ## Links
 
+
+- [New-TracerBuilder](New-TracerBuilder.md)
 - [Add-HttpClientInstrumentation](Add-HttpClientInstrumentation.md)
+- [Start-Tracer](Start-Tracer.md)

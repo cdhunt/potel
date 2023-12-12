@@ -1,6 +1,10 @@
 <#
 .SYNOPSIS
     Start the Tracer
+.PARAMETER TracerProviderBuilder
+    A TracerProviderBuilderBase object
+.PARAMETER PassThru
+    Send the build TracerProvider to the pipeline
 .LINK
     New-TracerProviderBuilder
 #>
@@ -9,7 +13,7 @@ function Start-Tracer {
     param (
         [Parameter(Mandatory, Position = 0, ValueFromPipeline)]
         [OpenTelemetry.Trace.TracerProviderBuilderBase]
-        $InputObject,
+        $TracerProviderBuilder,
 
         [Parameter()]
         [switch]$PassThru

@@ -1,26 +1,47 @@
 # New-TracerProviderBuilder
 
-Creates instance of OpenTelemetry.Sdk TracerProviderBuilder
 
+Creates instance of OpenTelemetry.Sdk TracerProviderBuilder
 ## Parameters
 
-- `[String]`  **ActivityName**
- _no description_
-- `[ActivitySource]`  **ActivitySource**
- _no description_
+
+### Parameter Set 1
+
+
+- `[String]` **ActivityName** _Parameter help description_.  
+
+
+### Parameter Set 2
+
+
+- `[ActivitySource]` **ActivitySource** _Parameter help description_.  
+
+
 ## Examples
 
+
 ### Example 1
+
+
+
 
 ```powershell
 New-TracerProviderBuilder
 ```
+
+
 ### Example 2
+
+
+
 
 ```powershell
 New-TracerProviderBuilder -ActivyName "MyActivity"
 ```
+
+
 ## Links
+
 
 - [Add-TracerSource](Add-TracerSource.md)
 - [Start-Tracer](Start-Tracer.md)
