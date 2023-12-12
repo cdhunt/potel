@@ -28,7 +28,7 @@ param (
     $Prerelease
 )
 
-if ( (Get-Command 'nbgv' -CommandType Application) ) {
+if ( (Get-Command 'nbgv' -CommandType Application -ErrorAction SilentlyContinue) ) {
     if (!$PSBoundParameters.ContainsKey('Major')) { $Major = $(nbgv get-version -v VersionMajor) }
     if (!$PSBoundParameters.ContainsKey('Minor')) { $Major = $(nbgv get-version -v VersionMinor) }
     if (!$PSBoundParameters.ContainsKey('Build')) { $Major = $(nbgv get-version -v BuildNumber) }
