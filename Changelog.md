@@ -1,3 +1,5 @@
 # Changelog
-## v0.1.12
-- [8d7c874](https://github.com/cdhunt/potel/commit/8d7c87438086b2b4d551c1c79e6df05a21a62057) Cleans up documentation and Docs build task
+
+## v0.1.16
+
+- [662f6b5](https://github.com/cdhunt/potel/commit/662f6b572eacb2554330bcd0062be5b64e692ff7) Cleans up documentation and Docs build task
