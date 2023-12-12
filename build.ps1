@@ -9,24 +9,31 @@ param (
 
     [Parameter(Position = 1)]
     [int]
-    $Major = $(nbgv get-version -v VersionMajor),
+    $Major,
 
     [Parameter(Position = 2)]
     [int]
-    $Minor = $(nbgv get-version -v VersionMinor),
+    $Minor,
 
     [Parameter(Position = 3)]
     [int]
-    $Build = $(nbgv get-version -v BuildNumber),
+    $Build,
 
     [Parameter(Position = 4)]
     [int]
-    $Revision = $(nbgv get-version -v Revision),
+    $Revision,
 
     [Parameter(Position = 5)]
     [string]
     $Prerelease
 )
+
+if ( (Get-Command nbgv -CommandType Application) ) {
+    if (!$PSBoundParameters.ContainsKey('Major')) { $Major = $(nbgv get-version -v VersionMajor) }
+    if (!$PSBoundParameters.ContainsKey('Minor')) { $Major = $(nbgv get-version -v VersionMinor) }
+    if (!$PSBoundParameters.ContainsKey('Build')) { $Major = $(nbgv get-version -v BuildNumber) }
+    if (!$PSBoundParameters.ContainsKey('Revision')) { $Major = $(nbgv get-version -v Revision) }
+}
 
 $parent = $PSScriptRoot
 $parent = [string]::IsNullOrEmpty($parent) ? $pwd.Path : $parent
