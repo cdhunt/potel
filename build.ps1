@@ -139,7 +139,7 @@ function Test {
 function ChangeLog {
     param ()
 
-    "# Changlog"
+    "# Changelog"
 
     # Start log at >0.1.11
     for ($m = $Minor; $m -ge 1; $m--) {
