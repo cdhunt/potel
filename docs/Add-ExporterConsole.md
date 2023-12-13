@@ -8,13 +8,13 @@ Adds OpenTelemetry.Exporter.Console
 ### Parameter Set 1
 
 
-- `[TracerProviderBuilderBase]` **TracerProvider** _Instance of TracerProviderBuilderBase_.  Mandatory, ValueFromPipeline
+- `[TracerProviderBuilderBase]` **TracerProvider** _Instance of TracerProviderBuilderBase._.  Mandatory, ValueFromPipeline
 
 
 ### Parameter Set 2
 
 
-- `[MeterProviderBuilderBase]` **MeterBuilder** _Instance of MeterProviderBuilderBase_.  Mandatory, ValueFromPipeline
+- `[MeterProviderBuilderBase]` **MeterBuilder** _Instance of MeterProviderBuilderBase._.  Mandatory, ValueFromPipeline
 
 
 ## Examples

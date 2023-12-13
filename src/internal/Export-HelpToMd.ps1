@@ -10,7 +10,7 @@ function Export-HelpToMd {
         function GetText {
             param ([string]$text, [string]$default)
 
-            $text = $text.Trim().Trim('.')
+            $text = $text.Trim()
             if ([string]::IsNullOrEmpty($text)) {
                 if ([string]::IsNullOrEmpty($default)) {
                     $default = 'No description'
