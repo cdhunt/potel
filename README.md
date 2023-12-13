@@ -13,4 +13,17 @@ PowerShell module for collecting and sending Open Telemetry
 
 ## Docs
 
-[docs](docs)
+[Full Docs](docs)
+
+### Getting Started
+
+Auto-instrument `HttpClient`` calls within the current PowerShell session and send traces to [HoneyComb.io](https://honeycomb.io) and the console.
+
+```powershell
+New-TracerProviderBuilder |
+    Add-TracerSource -Name "potel" |
+    Add-HttpClientInstrumentation |
+    Add-ExporterOtlpTrace -Endpoint https://api.honeycomb.io:443 -Headers @{'x-honeycomb-team'='abc123'} |
+    Add-ExporterConsole |
+    Start-Tracer
+```

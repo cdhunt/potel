@@ -1,5 +1,9 @@
 # Changelog
 
-## v0.1.16
+## v0.1.21
 
-- [662f6b5](https://github.com/cdhunt/potel/commit/662f6b572eacb2554330bcd0062be5b64e692ff7) Cleans up documentation and Docs build task
+- [f62dd7f](https://github.com/cdhunt/potel/commit/f62dd7fb2dadacc747dd1974f491db5941cad113) Fixes some parameter names
+
+## v0.1.20
+
+- [e4092f7](https://github.com/cdhunt/potel/commit/e4092f7d5bbd891e10c4968db2ab5498d85602ff) Attempt to green the build
