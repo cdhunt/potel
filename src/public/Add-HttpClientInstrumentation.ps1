@@ -4,7 +4,7 @@ function Add-HttpClientInstrumentation {
 		Adds Http Client Instrumentation
 	.DESCRIPTION
 		Adds Http Client Instrumentation
-	.PARAMETER InputObject
+	.PARAMETER TracerProvider
 		Instance of TracerProviderBuilderBase.
 	.INPUTS
 		Instance of TracerProviderBuilderBase
@@ -20,10 +20,10 @@ function Add-HttpClientInstrumentation {
         # Parameter help description
         [Parameter(Mandatory, Position = 0, ValueFromPipeline)]
         [OpenTelemetry.Trace.TracerProviderBuilderBase]
-        $InputObject
+        $TracerProvider
     )
 
     $type = [System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object Location -like "*potel*lib*OpenTelemetry.Instrumentation.Http.dll" | Select-Object -Last 1
 
-    $type.GetType('OpenTelemetry.Trace.TracerProviderBuilderExtensions').GetMethod('AddHttpClientInstrumentation', ([System.Reflection.BindingFlags]::Public -bor [System.Reflection.BindingFlags]::Static), [OpenTelemetry.Trace.TracerProviderBuilder]).Invoke($null, @($InputObject))
+    $type.GetType('OpenTelemetry.Trace.TracerProviderBuilderExtensions').GetMethod('AddHttpClientInstrumentation', ([System.Reflection.BindingFlags]::Public -bor [System.Reflection.BindingFlags]::Static), [OpenTelemetry.Trace.TracerProviderBuilder]).Invoke($null, @($TracerProvider))
 }

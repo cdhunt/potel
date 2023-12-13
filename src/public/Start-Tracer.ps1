@@ -19,7 +19,7 @@ function Start-Tracer {
         [switch]$PassThru
     )
 
-    $global:potel_provider = [OpenTelemetry.Trace.TracerProviderBuilderExtensions]::Build($InputObject)
+    $global:potel_provider = [OpenTelemetry.Trace.TracerProviderBuilderExtensions]::Build($TracerProviderBuilder)
 
     if ($PassThru) {
         Write-Output $potel_provider

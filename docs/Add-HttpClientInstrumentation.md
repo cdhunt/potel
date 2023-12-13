@@ -8,7 +8,7 @@ Adds Http Client Instrumentation
 ### Parameter Set 1
 
 
-- `[TracerProviderBuilderBase]` **InputObject** _Instance of TracerProviderBuilderBase_.  Mandatory, ValueFromPipeline
+- `[TracerProviderBuilderBase]` **TracerProvider** _Instance of TracerProviderBuilderBase_.  Mandatory, ValueFromPipeline
 
 
 ## Examples
