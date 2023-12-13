@@ -17,7 +17,7 @@ PowerShell module for collecting and sending Open Telemetry
 
 ### Getting Started
 
-Auto-instrument `HttpClient`` calls within the current PowerShell session and send traces to [HoneyComb.io](https://honeycomb.io) and the console.
+Auto-instrument `HttpClient` calls within the current PowerShell session and send traces to [HoneyComb.io](https://honeycomb.io) and the console.
 
 ```powershell
 New-TracerProviderBuilder |
