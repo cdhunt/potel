@@ -21,13 +21,25 @@ function Add-ExporterOtlpTrace {
 	.OUTPUTS
 		TracerProviderBuilderBase
 	.EXAMPLE
-		New-TracerProviderBuilder | Add-HttpClientInstrumentation | Add-ExporterOtlpTrace | Start-Trace
+		New-TracerProviderBuilder | Add-HttpClientInstrumentation | Add-ExporterOtlpTrace -Endpoint http://localhost:9999 | Start-Trace
+    .EXAMPLE
+        Add-ExporterOtlpTrace  https://api.honeycomb.io:443 -Headers @{'x-honeycomb-team'='token'}
+
+        Configure the Otlp Exporter for Honeycomb.
+    .EXAMPLE
+        Add-ExporterOtlpTrace -Endpoint https://{your-environment-id}.live.dynatrace.com/api/v2/otlp -Headers @{'Authorization'='Api-Token dt.....'} -Protocol 'http/protobuf'
+
+        Configure the Otlp Exporter for Dynatrace.
     .LINK
         New-TracerProviderBuilder
     .LINK
         Add-HttpClientInstrumentation
     .LINK
         Start-Tracer
+    .LINK
+        https://docs.honeycomb.io/getting-data-in/opentelemetry-overview/#using-the-honeycomb-opentelemetry-endpoint
+    .LINK
+        https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry/getting-started/otlp-export
 	#>
     [CmdletBinding()]
     param (

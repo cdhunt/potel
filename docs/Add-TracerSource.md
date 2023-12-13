@@ -50,3 +50,4 @@ New-TracerProviderBuilder | Add-TracerSource -AcvititySource $source
 
 - [New-TracerProviderBuilder](New-TracerProviderBuilder.md)
 - [New-ActivitySource](New-ActivitySource.md)
+- [https://opentelemetry.io/docs/instrumentation/net/manual/#setting-up-an-activitysource](https://opentelemetry.io/docs/instrumentation/net/manual/#setting-up-an-activitysource)

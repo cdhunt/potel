@@ -27,6 +27,8 @@ function Add-TracerSource {
         New-TracerProviderBuilder
     .LINK
         New-ActivitySource
+    .LINK
+        https://opentelemetry.io/docs/instrumentation/net/manual/#setting-up-an-activitysource
 	#>
     [CmdletBinding(DefaultParameterSetName = "byString")]
     param (
