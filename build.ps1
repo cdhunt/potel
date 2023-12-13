@@ -164,11 +164,13 @@ function Commit {
 function Publish {
     param ()
 
+    <# Disabled for now
     $docChanges = git status docs -s
 
     if ($docChanges.count -gt 0) {
         Write-Warning "There are pending Docs change. Run './build.ps1 docs', review and commit updated docs."
     }
+    #>
 
     $repo = if ($env:PSPublishRepo) { $env:PSPublishRepo } else { 'PSGallery' }
 

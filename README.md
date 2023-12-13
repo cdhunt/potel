@@ -7,6 +7,8 @@ PowerShell module for collecting and sending Open Telemetry
 
 ## Install
 
+[powershellgallery.com/packages/potel](https://www.powershellgallery.com/packages/potel)
+
 `Install-Module -Name potel` or `Install-PSResource -Name potel`
 
 ## Docs
