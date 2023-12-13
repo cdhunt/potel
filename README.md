@@ -22,6 +22,7 @@ Auto-instrument `HttpClient` calls within the current PowerShell session and sen
 ```powershell
 New-TracerProviderBuilder |
     Add-TracerSource -Name "potel" |
+    Add-ResourceConfiguration -ServiceName $ExecutionContext.Host.Name -Attribute @{"host.name" = $(hostname)} |
     Add-HttpClientInstrumentation |
     Add-ExporterOtlpTrace -Endpoint https://api.honeycomb.io:443 -Headers @{'x-honeycomb-team'='abc123'} |
     Add-ExporterConsole |
