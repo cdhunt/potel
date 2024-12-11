@@ -35,11 +35,12 @@ if ( (Get-Command 'nbgv' -CommandType Application -ErrorAction SilentlyContinue)
     if (!$PSBoundParameters.ContainsKey('Revision')) { $Revision = $(nbgv get-version -v VersionRevision) }
 }
 
+$module = 'potel'
 $parent = $PSScriptRoot
 $parent = [string]::IsNullOrEmpty($parent) ? $pwd.Path : $parent
 $src = Join-Path $parent -ChildPath "src"
 $docs = Join-Path $parent -ChildPath "docs"
-$publish = Join-Path $parent -ChildPath "publish" -AdditionalChildPath 'potel'
+$publish = [System.IO.Path]::Combine($parent, "publish", $module)
 $csproj = Join-Path -Path $src -ChildPath "dotnet" -AdditionalChildPath "potel.csproj"
 $bin = Join-Path -Path $src -ChildPath "dotnet" -AdditionalChildPath "bin"
 $obj = Join-Path -Path $src -ChildPath "dotnet" -AdditionalChildPath "obj"
@@ -55,19 +56,20 @@ Write-Host "dotnet: $([Environment]::Version)"
 Write-Host "ps: $($PSVersionTable.PSVersion)"
 
 $manifest = @{
-    Path                  = Join-Path -Path $publish -ChildPath 'potel.psd1'
+    Path                  = Join-Path -Path $publish -ChildPath  "$module.psd1"
     Author                = 'Chris Hunt'
     CompanyName           = 'Chris Hunt'
-    Copyright             = 'Chris Hunt'
+    Copyright             = '(c) Chris Hunt. All rights reserved.'
     CompatiblePSEditions  = "Core"
     Description           = 'PowerShell module for collecting and sending Open Telemetry'
-    LicenseUri            = 'https://github.com/cdhunt/potel/blob/main/LICENSE'
+    GUID                  = '0be70178-3d95-45cd-b3c5-d024ba8c18c7'
+    LicenseUri            = "https://github.com/cdhunt/$module/blob/main/LICENSE"
     FunctionsToExport     = @()
     ModuleVersion         = [version]::new($Major, $Minor, $Build, $Revision)
     ProcessorArchitecture = 'Amd64'
     PowerShellVersion     = '7.3'
-    ProjectUri            = 'https://github.com/cdhunt/potel'
-    RootModule            = 'potel.psm1'
+    ProjectUri            = "https://github.com/cdhunt/$module"
+    RootModule            = "$module.psm1"
     Tags                  = @('otel', 'distributed-tracing', 'metrics', 'telemetry', 'diagnostics')
 }
 
@@ -94,17 +96,11 @@ function Build {
         Get-ChildItem -Path $_ -filter "potel.dll" | Remove-Item -Force -ErrorAction SilentlyContinue
     }
 
-    Copy-Item -Path "$src/potel.psm1" -Destination $publish
+    Copy-Item -Path "$src/$module.psm1" -Destination $publish
     Copy-Item -Path @("$parent/LICENSE", "$parent/README.md") -Destination $publish
 
-    $internalFunctions = Get-ChildItem -Path "$src/internal/*.ps1"
     $publicFunctions = Get-ChildItem -Path "$src/public/*.ps1"
     $privateFunctions = Get-ChildItem -Path "$src/private/*.ps1" -ErrorAction SilentlyContinue
-
-    New-Item -Path "$publish/internal" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
-    foreach ($function in $internalFunctions) {
-        Copy-Item -Path $function.FullName -Destination "$publish/internal/$($function.Name)"
-    }
 
     New-Item -Path "$publish/public" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
     foreach ($function in $publicFunctions) {
@@ -129,11 +125,20 @@ function Build {
 function Test {
     param ()
 
-    if ($null -eq (Get-Module Pester -ListAvailable)) {
-        Install-Module -Name Pester -Confirm:$false -Force
+    if ($null -eq (Get-Module Pester -ListAvailable | Where-Object { [version]$_.Version -ge [version]"5.5.0" })) {
+        Install-Module -Name Pester -MinimumVersion 5.5.0 -Confirm:$false -Force
     }
 
-    Invoke-Pester -Path test
+    $config = New-PesterConfiguration -Hashtable @{
+        Run        = @{ Path = "test" }
+        TestResult = @{
+            Enabled      = $true
+            OutputFormat = "NUnitXml"
+        }
+        Output     = @{ Verbosity = "Detailed" }
+    }
+
+    Invoke-Pester -Configuration $config
 }
 
 function ChangeLog {
@@ -181,24 +186,28 @@ function Publish {
 function Docs {
     param ()
 
+    if ($null -eq (Get-Module Build-Docs -ListAvailable | Where-Object { [version]$_.Version -ge [version]"0.2.0.2" })) {
+        Install-Module -Name Build-Docs -MinimumVersion 0.2.0.2 -Confirm:$false -Force
+    }
+
     Import-Module $publish -Force
 
-    $commands = Get-Command -Module potel
-    $HelpToMd = Join-Path -Path $src -ChildPath 'internal' -AdditionalChildPath 'Export-HelpToMd.ps1'
-    . $HelpToMd
+    $help = Get-HelpModuleData $module
 
-    @('# Potel', [System.Environment]::NewLine) | Set-Content -Path "$docs/README.md"
-    $($manifest.Description) | Add-Content -Path "$docs/README.md"
-    @('## Cmdlets', [System.Environment]::NewLine) | Add-Content -Path "$docs/README.md"
+    # docs/README.md
+    $help | New-HelpDoc |
+    Add-ModuleProperty Name -H1 |
+    Add-ModuleProperty Description |
+    Add-HelpDocText "Commands" -H2 |
+    Add-ModuleCommand -AsLinks |
+    Out-HelpDoc -Path 'docs/README.md'
 
-    foreach ($command in $Commands | Sort-Object -Property Verb) {
+    # Individual Commands
+    foreach ($command in $help.Commands) {
         $name = $command.Name
-        $docPath = Join-Path -Path $docs -ChildPath "$name.md"
-        $help = Get-Help -Name $name
-
-        Export-HelpToMd $help | Set-Content -Path $docPath
-
-        "- [$name]($name.md) $($help.Synopsis)" | Add-Content -Path "$docs/README.md"
+        $doc = New-HelpDoc -HelpModuleData $help
+        $doc.Text = $command.ToMD()
+        $doc | Out-HelpDoc -Path "docs/$name.md"
     }
 
     ChangeLog | Set-Content -Path "$parent/Changelog.md"

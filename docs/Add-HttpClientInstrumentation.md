@@ -1,21 +1,16 @@
 # Add-HttpClientInstrumentation
 
-
 Adds Http Client Instrumentation
-## Parameters
 
+## Parameters
 
 ### Parameter Set 1
 
-
-- `[TracerProviderBuilderBase]` **TracerProvider** _Instance of TracerProviderBuilderBase._.  Mandatory, ValueFromPipeline
-
+- `[TracerProviderBuilderBase]` **TracerProvider** _Instance of TracerProviderBuilderBase._ Mandatory, ValueFromPipeline
 
 ## Examples
 
-
 ### Example 1
-
 
 
 
@@ -23,8 +18,10 @@ Adds Http Client Instrumentation
 New-TracerProviderBuilder | Add-HttpClientInstrumentation
 ```
 
-
 ## Links
 
-
 - [New-TracerProviderBuilder](New-TracerProviderBuilder.md)
+
+## Outputs
+
+- `TracerProviderBuilderBase`
