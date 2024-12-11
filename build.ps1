@@ -99,8 +99,14 @@ function Build {
     Copy-Item -Path "$src/$module.psm1" -Destination $publish
     Copy-Item -Path @("$parent/LICENSE", "$parent/README.md") -Destination $publish
 
+    $internalFunctions = Get-ChildItem -Path "$src/internal/*.ps1"
     $publicFunctions = Get-ChildItem -Path "$src/public/*.ps1"
     $privateFunctions = Get-ChildItem -Path "$src/private/*.ps1" -ErrorAction SilentlyContinue
+
+    New-Item -Path "$publish/internal" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
+    foreach ($function in $internalFunctions) {
+        Copy-Item -Path $function.FullName -Destination "$publish/internal/$($function.Name)"
+    }
 
     New-Item -Path "$publish/public" -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
     foreach ($function in $publicFunctions) {
