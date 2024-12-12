@@ -71,7 +71,7 @@ jobs:
       image: mcr.microsoft.com/powershell:${{ matrix.pwshv }}-ubuntu-22.04
     strategy:
       matrix:
-        pwshv: ['7.4']
+        pwshv: ['7.4','preview-7.5']
 
     steps:
       - uses: actions/checkout@v4
