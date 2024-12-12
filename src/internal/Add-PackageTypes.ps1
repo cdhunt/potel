@@ -20,7 +20,7 @@ function Add-PackageTypes {
     }
 
     process {
-        $files = Get-ChildItem $target | Where-Object { $_.Name -like '*.dll' -and $_.BaseName -ne "grpc_csharp_ext.x64" -and $_.BaseName -ne 'Microsoft.Bcl.AsyncInterfaces' -and $_.BaseName -notlike 'System.*' } | Select-Object -ExpandProperty FullName
+        $files = Get-ChildItem $target | Where-Object { $_.Name -like '*.dll' -and $_.BaseName -ne "grpc_csharp_ext.x64" -and $_.BaseName -ne 'Microsoft.Bcl.AsyncInterfaces' } | Select-Object -ExpandProperty FullName
         foreach ($path in ($files)) {
             Add-Type -Path $path
         }
