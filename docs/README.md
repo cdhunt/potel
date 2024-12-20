@@ -4,13 +4,17 @@ PowerShell module for collecting and sending Open Telemetry
 
 ## Commands
 
+- [Add-ActivityEvent](Add-ActivityEvent.md) _Add a timestamped message to an Activity._
+- [Add-ActivityTag](Add-ActivityTag.md) _Add key-value data called Tags to an Activity._
 - [Add-ExporterConsole](Add-ExporterConsole.md) _Adds a Console Exporter_
 - [Add-ExporterOtlpTrace](Add-ExporterOtlpTrace.md) _Adds an OTLP Exporter_
 - [Add-HttpClientInstrumentation](Add-HttpClientInstrumentation.md) _Adds Http Client Instrumentation_
 - [Add-ResourceConfiguration](Add-ResourceConfiguration.md) _Adds a Resource Configuration to a Tracer_
 - [Add-TracerSource](Add-TracerSource.md) _Adds and ActivitySource to a TracerProviderBuilder_
-- [New-ActivitySource](New-ActivitySource.md) _Create a new ActivitySource object_
+- [New-ActivitySource](New-ActivitySource.md) _Create an instance of ActivitySource._
 - [New-TracerProviderBuilder](New-TracerProviderBuilder.md) _Creates new Tracer Provider Builder_
+- [Set-ActivityStatus](Set-ActivityStatus.md) _Set the Activity Status._
+- [Start-Activity](Start-Activity.md) _Start an Activity._
 - [Start-Tracer](Start-Tracer.md) _Start the Tracer_
 - [Stop-Tracer](Stop-Tracer.md) _Stop the Tracer_
 
