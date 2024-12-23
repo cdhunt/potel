@@ -48,9 +48,9 @@ The Sample module creates a Tracer in manifest using the Service Name `potel-sam
 
 We attach two Exporters - OtlpTrace and Console. All activities will be sent to both Exporters. The OtlpTrace exporter will send data to Jaeger in this instance and the Console exporter will write output to StdOut.
 
-This sample also uses the [Zero-code instrumentation](https://opentelemetry.io/docs/concepts/instrumentation/zero-code/) for `System.Net.Http.HttPClient` which will automatically create Activities when methods of the `HttPClient` are invoked.
+This sample also uses the [Zero-code instrumentation](https://opentelemetry.io/docs/concepts/instrumentation/zero-code/) for `System.Net.Http.HttPClient` which will automatically create Activities when methods of `HttPClient` are invoked.
 
-The Tracer exists globally in the current PowerShell session in the current version of **potel**. This brings with it some considerations. The `HttPClient` instrumentation will record every instance of `HttPClient` for any process within PowerShell. Filtering has not yet been implemented. It will also continue to generate new Activities/Spans until `Stop-Tracer` is called or the PowerShell process is stopped.
+The Tracer exists globally in the PowerShell session in the current version of **potel**. This brings with it some considerations. The `HttPClient` instrumentation will record every instance of `HttPClient` for any process within PowerShell. Filtering has not yet been implemented. It will also continue to generate new Activities/Spans until `Stop-Tracer` is called or the PowerShell process is stopped.
 
 ```powershell
 $activitySource = New-ActivitySource -Name potel-sample
@@ -79,6 +79,6 @@ Here is what the data in looks like in Jaeger when you import the module `sample
 
 ![](jaegersample.jpg)
 
-You see three nested spans: `Get-SampleSomething` calls `Get-Google` which makes an Http Get request to google.com. Within `Get-SampleSomething` you can see the two Events logged and all three include the resource attribute `host.name = chunt`.
+You see three nested spans: `Get-SampleSomething` calls `Get-Google` which makes an Http Get request to google.com. Within `Get-SampleSomething` you can see the two Events logged and all three spans include the resource attribute `host.name = chunt`.
 
-With the HttpClientInstrumentation the Get request will include a standard `traceid` header and if that request hits a service that is also reporting Otel traces to the same Exporter you should be able to follow the Distributed Trace across multiple services.
+With HttpClientInstrumentation the Get request will include a standard `traceid` header and if that request hits a service that is also reporting Otel traces to the same Exporter you should be able to follow the Distributed Trace across multiple services.
