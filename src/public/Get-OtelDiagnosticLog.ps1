@@ -7,6 +7,10 @@
     Enable-OtelDiagnosticLog
 .EXAMPLE
     Get-OtelDiagnosticLog
+        Directory: C:\Users\user
+    Mode                LastWriteTime         Length Name
+    ----                -------------         ------ ----
+    -a---        12/23/2024  12:02 PM       33554432 pwsh.exe.131616.log
 
     Get the internal logs.
 #>
@@ -24,8 +28,12 @@ function Get-OtelDiagnosticLog {
         $executableName = Get-Process -Id $PID | Select-Object -ExpandProperty ProcessName
         $logName = '{0}.exe.{1}.log' -f $executableName, $PID
 
-        $logPath = Join-Path -Path $settings.LogDirectory -ChildPath $logName
+        if ([IO.Path]::IsPathFullyQualified($settings.LogDirectory)) {
+            $logPath = Join-Path -Path $settings.LogDirectory -ChildPath $logName
+        } else {
+            $logPath = Join-Path -Path ([System.IO.Directory]::GetCurrentDirectory()) -ChildPath $settings.LogDirectory -AdditionalChildPath $logName
+        }
 
-        Get-Content -Path $logPath
+        Get-Item -Path $logPath
     }
 }

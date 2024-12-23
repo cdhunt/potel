@@ -14,6 +14,8 @@
 
     A log file named as `ExecutableName.ProcessId.log` (e.g. pwsh.exe.12345.log) will be generated at the specified directory LogDirectory, into which logs are written to.
 .LINK
+    Get-OtelDiagnosticLog
+.LINK
     Disable-OtelDiagnosticLog
 .LINK
     https://github.com/open-telemetry/opentelemetry-dotnet/tree/main/src/OpenTelemetry#self-diagnostics
@@ -49,11 +51,13 @@ function Enable-OtelDiagnosticLog {
     $settings = [pscustomobject]@{
         LogDirectory = $LogDirectory
         FileSize     = $FileSize
-        LogLevel    = $LogLevel.ToString()
+        LogLevel     = $LogLevel.ToString()
     }
     $content = $settings | ConvertTo-Json
     $path = Join-Path -Path ([System.IO.Directory]::GetCurrentDirectory()) -ChildPath $name
 
     $content | Set-Content -Path $path
+
+    Get-Item $path
 
 }

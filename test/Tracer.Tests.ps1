@@ -154,16 +154,17 @@ Describe 'Enable-OtelDiagnosticLog' {
         }
 
         It 'Should create "OTEL_DIAGNOSTICS.json"' {
-            Enable-OtelDiagnosticLog
-            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -Exist
-            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -FileContentMatchMultiline '{\r?\n\s+"LogDirectory": "\.\",\r?\n\s+"FileSize": 32768,\r?\n\s+"LogLevel": "Warning"\r?\n}'
+            $config = Enable-OtelDiagnosticLog
+            $config.FullName | Should -Exist
+            $config.FullName | Should -FileContentMatchMultiline '{\r?\n\s+"LogDirectory": "\.\",\r?\n\s+"FileSize": 32768,\r?\n\s+"LogLevel": "Warning"\r?\n}'
         }
 
         It 'Should set "OTEL_DIAGNOSTICS.json" options' {
-            Enable-OtelDiagnosticLog -LogDirectory "./logs" -FileSize 2048 -LogLevel Verbose
-            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -Exist
-            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -FileContentMatchMultiline '{\r?\n\s+"LogDirectory": "\.\/logs",\r?\n\s+"FileSize": 2048,\r?\n\s+"LogLevel": "Verbose"\r?\n}'
+            $config = Enable-OtelDiagnosticLog -LogDirectory "./logs" -FileSize 2048 -LogLevel Verbose
+            $config.FullName | Should -Exist
+            $config.FullName | Should -FileContentMatchMultiline '{\r?\n\s+"LogDirectory": "\.\/logs",\r?\n\s+"FileSize": 2048,\r?\n\s+"LogLevel": "Verbose"\r?\n}'
         }
+
     }
 }
 
