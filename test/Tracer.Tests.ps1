@@ -142,36 +142,27 @@ Describe 'Add-ExporterOtlpTrace' {
 }
 
 Describe 'Enable-OtelDiagnosticLog' {
-    Context 'Create new config file' {
+    Context 'Create new config file with' {
         BeforeAll {
             Push-Location TestDrive:/
+            $cwd = Get-PSDrive -Name TestDrive | Select-Object -ExpandProperty Root
+            [System.IO.Directory]::SetCurrentDirectory($cwd)
         }
         AfterAll {
             Pop-Location
+            [System.IO.Directory]::SetCurrentDirectory($PWD.Path)
         }
 
         It 'Should create "OTEL_DIAGNOSTICS.json"' {
-            Enable-OtelDiagnosticLog -LogDirectory "./logs"
+            Enable-OtelDiagnosticLog
             "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -Exist
-            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -ExpectedContent @"
-{
-    "LogDirectory": "./logs",
-    "FileSize": 32768,
-    "LogLevel": "Warning"
-}
-"@
+            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -FileContentMatchMultiline '{\r?\n\s+"LogDirectory": "\.\",\r?\n\s+"FileSize": 32768,\r?\n\s+"LogLevel": "Warning"\r?\n}'
         }
 
-        It 'Should create "OTEL_DIAGNOSTICS.json" with options' {
+        It 'Should set "OTEL_DIAGNOSTICS.json" options' {
             Enable-OtelDiagnosticLog -LogDirectory "./logs" -FileSize 2048 -LogLevel Verbose
             "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -Exist
-            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -ExpectedContent @"
-{
-    "LogDirectory": "./logs",
-    "FileSize": 2048,
-    "LogLevel": "Verbose"
-}
-"@
+            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -FileContentMatchMultiline '{\r?\n\s+"LogDirectory": "\.\/logs",\r?\n\s+"FileSize": 2048,\r?\n\s+"LogLevel": "Verbose"\r?\n}'
         }
     }
 }
@@ -180,6 +171,8 @@ Describe 'Disabled-OtelDiagnosticLog' {
     Context 'Remove existing file' {
         BeforeEach {
             Push-Location TestDrive:/
+            $cwd = Get-PSDrive -Name TestDrive | Select-Object -ExpandProperty Root
+            [System.IO.Directory]::SetCurrentDirectory($cwd)
             @"
 {
     "LogDirectory": ".",
@@ -191,10 +184,11 @@ Describe 'Disabled-OtelDiagnosticLog' {
 
         AfterAll {
             Pop-Location
+            [System.IO.Directory]::SetCurrentDirectory($PWD.Path)
         }
 
         It 'Should remove "OTEL_DIAGNOSTICS.json"' {
-            Disabled-OtelDiagnosticLog
+            Disable-OtelDiagnosticLog
 
             "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -Not -Exist
         }

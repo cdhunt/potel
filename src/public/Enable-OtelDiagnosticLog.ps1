@@ -49,7 +49,7 @@ function Enable-OtelDiagnosticLog {
     $settings = [pscustomobject]@{
         LogDirectory = $LogDirectory
         FileSize     = $FileSize
-        $LogLevel    = $LogLevel.ToString()
+        LogLevel    = $LogLevel.ToString()
     }
     $content = $settings | ConvertTo-Json
     $path = Join-Path -Path ([System.IO.Directory]::GetCurrentDirectory()) -ChildPath $name
