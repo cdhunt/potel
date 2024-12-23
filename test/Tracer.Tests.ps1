@@ -1,11 +1,5 @@
 BeforeAll {
-    Import-Module $PSScriptRoot/../publish/potel -Force
-    $modulePath = Get-Module potel | Select-Object -ExpandProperty Path | Split-Path -Parent
-
-    $addTypes = Join-Path -Path $modulePath -ChildPath internal -AdditionalChildPath Add-PackageTypes.ps1
-    . "$addTypes"
-
-    Add-PackageTypes -LibsDirectory "$modulePath/lib"
+    Import-Module $PSScriptRoot/../publish/potel/potel.psd1 -Force
 }
 
 Describe 'New-TracePRoviderBuilder' {
@@ -144,6 +138,67 @@ Describe 'Add-ExporterOtlpTrace' {
             $result = [OpenTelemetry.Sdk]::CreateMeterProviderBuilder() | Add-ExporterConsole
             $result.GetType().FullName | Should -be 'OpenTelemetry.Metrics.MeterProviderBuilderBase'
         }
+    }
+}
+
+Describe 'Enable-OtelDiagnosticLog' {
+    Context 'Create new config file' {
+        BeforeAll {
+            Push-Location TestDrive:/
+        }
+        AfterAll {
+            Pop-Location
+        }
+
+        It 'Should create "OTEL_DIAGNOSTICS.json"' {
+            Enable-OtelDiagnosticLog -LogDirectory "./logs"
+            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -Exist
+            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -ExpectedContent @"
+{
+    "LogDirectory": "./logs",
+    "FileSize": 32768,
+    "LogLevel": "Warning"
+}
+"@
+        }
+
+        It 'Should create "OTEL_DIAGNOSTICS.json" with options' {
+            Enable-OtelDiagnosticLog -LogDirectory "./logs" -FileSize 2048 -LogLevel Verbose
+            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -Exist
+            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -ExpectedContent @"
+{
+    "LogDirectory": "./logs",
+    "FileSize": 2048,
+    "LogLevel": "Verbose"
+}
+"@
+        }
+    }
+}
+
+Describe 'Disabled-OtelDiagnosticLog' {
+    Context 'Remove existing file' {
+        BeforeEach {
+            Push-Location TestDrive:/
+            @"
+{
+    "LogDirectory": ".",
+    "FileSize": 32768,
+    "LogLevel": "Warning"
+}
+"@ | Set-Content TestDrive:/OTEL_DIAGNOSTICS.json
+        }
+
+        AfterAll {
+            Pop-Location
+        }
+
+        It 'Should remove "OTEL_DIAGNOSTICS.json"' {
+            Disabled-OtelDiagnosticLog
+
+            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -Not -Exist
+        }
+
     }
 }
 
