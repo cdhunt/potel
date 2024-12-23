@@ -1,11 +1,5 @@
 BeforeAll {
-    Import-Module $PSScriptRoot/../publish/potel -Force
-    $modulePath = Get-Module potel | Select-Object -ExpandProperty Path | Split-Path -Parent
-
-    $addTypes = Join-Path -Path $modulePath -ChildPath internal -AdditionalChildPath Add-PackageTypes.ps1
-    . "$addTypes"
-
-    Add-PackageTypes -LibsDirectory "$modulePath/lib"
+    Import-Module $PSScriptRoot/../publish/potel/potel.psd1 -Force
 }
 
 Describe 'New-TracePRoviderBuilder' {
@@ -144,6 +138,62 @@ Describe 'Add-ExporterOtlpTrace' {
             $result = [OpenTelemetry.Sdk]::CreateMeterProviderBuilder() | Add-ExporterConsole
             $result.GetType().FullName | Should -be 'OpenTelemetry.Metrics.MeterProviderBuilderBase'
         }
+    }
+}
+
+Describe 'Enable-OtelDiagnosticLog' {
+    Context 'Create new config file with' {
+        BeforeAll {
+            Push-Location TestDrive:/
+            $cwd = Get-PSDrive -Name TestDrive | Select-Object -ExpandProperty Root
+            [System.IO.Directory]::SetCurrentDirectory($cwd)
+        }
+        AfterAll {
+            Pop-Location
+            [System.IO.Directory]::SetCurrentDirectory($PWD.Path)
+        }
+
+        It 'Should create "OTEL_DIAGNOSTICS.json"' {
+            $config = Enable-OtelDiagnosticLog
+            $config.FullName | Should -Exist
+            $config.FullName | Should -FileContentMatchMultiline '{\r?\n\s+"LogDirectory": "\.\",\r?\n\s+"FileSize": 32768,\r?\n\s+"LogLevel": "Warning"\r?\n}'
+        }
+
+        It 'Should set "OTEL_DIAGNOSTICS.json" options' {
+            $config = Enable-OtelDiagnosticLog -LogDirectory "./logs" -FileSize 2048 -LogLevel Verbose
+            $config.FullName | Should -Exist
+            $config.FullName | Should -FileContentMatchMultiline '{\r?\n\s+"LogDirectory": "\.\/logs",\r?\n\s+"FileSize": 2048,\r?\n\s+"LogLevel": "Verbose"\r?\n}'
+        }
+
+    }
+}
+
+Describe 'Disabled-OtelDiagnosticLog' {
+    Context 'Remove existing file' {
+        BeforeEach {
+            Push-Location TestDrive:/
+            $cwd = Get-PSDrive -Name TestDrive | Select-Object -ExpandProperty Root
+            [System.IO.Directory]::SetCurrentDirectory($cwd)
+            @"
+{
+    "LogDirectory": ".",
+    "FileSize": 32768,
+    "LogLevel": "Warning"
+}
+"@ | Set-Content TestDrive:/OTEL_DIAGNOSTICS.json
+        }
+
+        AfterAll {
+            Pop-Location
+            [System.IO.Directory]::SetCurrentDirectory($PWD.Path)
+        }
+
+        It 'Should remove "OTEL_DIAGNOSTICS.json"' {
+            Disable-OtelDiagnosticLog
+
+            "TestDrive:/OTEL_DIAGNOSTICS.json" | Should -Not -Exist
+        }
+
     }
 }
 

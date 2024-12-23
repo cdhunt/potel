@@ -25,5 +25,5 @@ function Add-HttpClientInstrumentation {
 
     $type = [System.AppDomain]::CurrentDomain.GetAssemblies() | Where-Object Location -like "*potel*lib*OpenTelemetry.Instrumentation.Http.dll" | Select-Object -Last 1
 
-    $type.GetType('OpenTelemetry.Trace.TracerProviderBuilderExtensions').GetMethod('AddHttpClientInstrumentation', ([System.Reflection.BindingFlags]::Public -bor [System.Reflection.BindingFlags]::Static), [OpenTelemetry.Trace.TracerProviderBuilder]).Invoke($null, @($TracerProvider))
+    $type.GetType('OpenTelemetry.Trace.HttpClientInstrumentationTracerProviderBuilderExtensions').GetMethod('AddHttpClientInstrumentation', ([System.Reflection.BindingFlags]::Public -bor [System.Reflection.BindingFlags]::Static), [OpenTelemetry.Trace.TracerProviderBuilder]).Invoke($null, @($TracerProvider))
 }
