@@ -21,6 +21,7 @@ New-TracerProviderBuilder | Add-HttpClientInstrumentation
 ## Links
 
 - [New-TracerProviderBuilder](New-TracerProviderBuilder.md)
+- [https://github.com/open-telemetry/opentelemetry-dotnet-contrib/blob/main/src/OpenTelemetry.Instrumentation.Http/README.md](https://github.com/open-telemetry/opentelemetry-dotnet-contrib/blob/main/src/OpenTelemetry.Instrumentation.Http/README.md)
 
 ## Outputs
 
