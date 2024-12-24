@@ -7,7 +7,7 @@ Adds Http Client Instrumentation.
 ### Parameter Set 1
 
 - `[TracerProviderBuilderBase]` **TracerProvider** _Instance of TracerProviderBuilderBase._ Mandatory, ValueFromPipeline
-- `[ScriptBlock]` **RequestFilter** _A filter function that determines whether or not to collect telemetry on a per request basis. Must return a bool._ 
+- `[ScriptBlock]` **RequestFilter** _A filter function that determines whether or not to collect telemetry on a per request basis. Must return a `[bool]` and act on an instance of `[Net.Http.HttpRequestMessage]`._ 
 - `[Switch]` **RecordException** _Indicating whether exception will be recorded ActivityEvent or not. This instrumentation automatically sets Activity Status to Error if the Http StatusCode is >= 400. Additionally, `RecordException` feature may be turned on, to store the exception to the Activity itself as ActivityEvent._ 
 
 ## Examples
@@ -31,7 +31,7 @@ New-TracerProviderBuilder | Add-HttpClientInstrumentation { $_.Method -eq 'Get' 
 Only collect web requests sent to the "google.com" domain.
 
 ```powershell
-New-TracerProviderBuilder | Add-HttpClientInstrumentation  { $_.RequestUri -like '*google.com*' }
+New-TracerProviderBuilder | Add-HttpClientInstrumentation  { $this.RequestUri -like '*google.com*' }
 ```
 
 ## Links

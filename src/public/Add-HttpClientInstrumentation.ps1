@@ -6,7 +6,7 @@
 .PARAMETER TracerProvider
 	Instance of TracerProviderBuilderBase.
 .PARAMETER RequestFilter
-    A filter function that determines whether or not to collect telemetry on a per request basis. Must return a bool.
+    A filter function that determines whether or not to collect telemetry on a per request basis. Must return a `[bool]` and act on an instance of `[Net.Http.HttpRequestMessage]`.
 .PARAMETER RecordException
     Indicating whether exception will be recorded ActivityEvent or not. This instrumentation automatically sets Activity Status to Error if the Http StatusCode is >= 400. Additionally, `RecordException` feature may be turned on, to store the exception to the Activity itself as ActivityEvent.
 .INPUTS
@@ -22,7 +22,7 @@
 
     Only collect web requests with a `Method` of `Get`.
 .EXAMPLE
-	New-TracerProviderBuilder | Add-HttpClientInstrumentation  { $_.RequestUri -like '*google.com*' }
+	New-TracerProviderBuilder | Add-HttpClientInstrumentation  { $this.RequestUri -like '*google.com*' }
 
     Only collect web requests sent to the "google.com" domain.
 .LINK
@@ -52,7 +52,11 @@ function Add-HttpClientInstrumentation {
         param([OpenTelemetry.Instrumentation.Http.HttpClientTraceInstrumentationOptions]$o)
 
         $o.FilterHttpRequestMessage = { param([Net.Http.HttpRequestMessage]$request)
-            $RequestFilter.InvokeWithContext($null, [PSVariable]::new('_', $request))
+            $context = [system.Collections.Generic.List[PSVariable]]::new()
+            $context.Add([PSVariable]::new('_', $request))
+            $context.Add([PSVariable]::new('this', $request))
+            $context.Add([PSVariable]::new('PSItem', $request))
+            $RequestFilter.InvokeWithContext($null, $context)
         }
 
         $o.RecordException = $RecordException
