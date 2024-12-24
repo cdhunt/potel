@@ -48,7 +48,7 @@ The Sample module creates a Tracer in manifest using the Service Name `potel-sam
 
 We attach two Exporters - OtlpTrace and Console. All activities will be sent to both Exporters. The OtlpTrace exporter will send data to Jaeger in this instance and the Console exporter will write output to StdOut.
 
-This sample also uses the [Zero-code instrumentation](https://opentelemetry.io/docs/concepts/instrumentation/zero-code/) for `System.Net.Http.HttPClient` which will automatically create Activities when methods of `HttPClient` are invoked.
+This sample also uses the [Zero-code instrumentation](https://opentelemetry.io/docs/concepts/instrumentation/zero-code/) for `System.Net.Http.HttPClient` which will automatically create Activities when methods of `HttPClient` are invoked. In this case we pass a filter script to only collect requests made to any google.com address.
 
 The Tracer exists globally in the PowerShell session in the current version of **potel**. This brings with it some considerations. The `HttPClient` instrumentation will record every instance of `HttPClient` for any process within PowerShell. Filtering has not yet been implemented. It will also continue to generate new Activities/Spans until `Stop-Tracer` is called or the PowerShell process is stopped.
 

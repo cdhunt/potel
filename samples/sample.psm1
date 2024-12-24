@@ -1,17 +1,12 @@
 # The Activity Source binds Activities (Spans) to a Tracer.
 $activitySource = New-ActivitySource -Name potel-sample
 
-# Only collect HttpClient requests to the google.com domain
-$options = New-HttpClientTraceInstrumentationOption -RequestFilter {
-    param([Net.Http.HttpRequestMessage]$request) $request.RequestUri -like '*google.com*'
-}
-
 # A Tracer provides the configuration and lifecycle of  your instrumentation.
 # The Tracer does nothing itself, but binds inputs and outputs.
 New-TracerProviderBuilder |
 Add-TracerSource -ActivitySource $activitySource |
 Add-ResourceConfiguration -ServiceName potel-sample -Attribute @{"host.name" = $(hostname) } |
-Add-HttpClientInstrumentation -Options $options |
+Add-HttpClientInstrumentation { $_.RequestUri -like '*google.com*' } |
 Add-ExporterOtlpTrace -Endpoint http://localhost:4317 |
 Add-ExporterConsole |
 Start-Tracer
