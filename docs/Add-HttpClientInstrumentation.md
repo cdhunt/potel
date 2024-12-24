@@ -7,6 +7,7 @@ Adds Http Client Instrumentation
 ### Parameter Set 1
 
 - `[TracerProviderBuilderBase]` **TracerProvider** _Instance of TracerProviderBuilderBase._ Mandatory, ValueFromPipeline
+- `[Action[OpenTelemetry.Instrumentation.Http.HttpClientTraceInstrumentationOptions]]` **Options** _Parameter help description_
 
 ## Examples
 
