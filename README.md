@@ -28,3 +28,5 @@ New-TracerProviderBuilder |
     Add-ExporterConsole |
     Start-Tracer
 ```
+
+See the [sample](samples/) module for a walkthrough of how to instrument your own module.

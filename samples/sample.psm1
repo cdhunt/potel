@@ -6,7 +6,7 @@ $activitySource = New-ActivitySource -Name potel-sample
 New-TracerProviderBuilder |
 Add-TracerSource -ActivitySource $activitySource |
 Add-ResourceConfiguration -ServiceName potel-sample -Attribute @{"host.name" = $(hostname) } |
-Add-HttpClientInstrumentation |
+Add-HttpClientInstrumentation { $_.RequestUri -like '*google.com*' } |
 Add-ExporterOtlpTrace -Endpoint http://localhost:4317 |
 Add-ExporterConsole |
 Start-Tracer
